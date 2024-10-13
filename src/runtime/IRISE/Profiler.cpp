@@ -1,10 +1,14 @@
 #include "Profiler.hpp"
 
 namespace irise {
-    Profiler::Profiler(iris::rt::Platform* platform) : platform(platform) {}
     Profiler::~Profiler() = default;
-
-    void Profiler::profileCompletedTask(iris::rt::Task* task) {
-
+    
+    Profiler& Profiler::instance() {
+        static Profiler instance;
+        return instance;
     }
+
+    void Profiler::setPlatform(iris::rt::Platform* platform_) {
+        platform = platform_;
+    } 
 }

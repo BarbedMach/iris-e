@@ -2,17 +2,23 @@
 
 #include "../Platform.h"
 #include "../Task.h"
+#include "CommandProfile.hpp"
 #include <string>
+#include <vector>
 
 namespace irise {
     class Profiler {
         public:
-            Profiler(iris::rt::Platform* platform);
-            ~Profiler();
-
-            void profileCompletedTask(iris::rt::Task* task);
+            Profiler(const Profiler&) = delete;
+            Profiler& operator=(const Profiler&) = delete;
             
+            static Profiler& instance();
+            void setPlatform(iris::rt::Platform* platform);
+
         private:
-            iris::rt::Platform* platform;
+            Profiler() = default;
+
+            iris::rt::Platform* platform = nullptr;
+            std::vector<CommandProfile> commandProfiles{};
     };
 }
