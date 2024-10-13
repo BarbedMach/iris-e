@@ -15,22 +15,22 @@ namespace irise {
             std::cout << "Environment variable `" << name << "` unset" << std::endl; 
         };
 
-        for (auto i = 0; i < modelCounts[0]; ++i) {
+        for (std::size_t i = 0; i < modelCounts[0]; ++i) {
             unsetEnvironmentVariable(std::string{"IRIS_DEVICE_CUDA_" + std::to_string(i)});
         }
-        for (auto i = 0; i < modelCounts[1]; ++i) {
+        for (std::size_t i = 0; i < modelCounts[1]; ++i) {
             unsetEnvironmentVariable(std::string{"IRIS_DEVICE_HIP_" + std::to_string(i)});
         }
-        for (auto i = 0; i < modelCounts[2]; ++i) {
+        for (std::size_t i = 0; i < modelCounts[2]; ++i) {
             unsetEnvironmentVariable(std::string{"IRIS_DEVICE_LZ_" + std::to_string(i)});
         }
-        for (auto i = 0; i < modelCounts[3]; ++i) {
+        for (std::size_t i = 0; i < modelCounts[3]; ++i) {
             unsetEnvironmentVariable(std::string{"IRIS_DEVICE_CL_" + std::to_string(i)});
         }
-        for (auto i = 0; i < modelCounts[4]; ++i) {
+        for (std::size_t i = 0; i < modelCounts[4]; ++i) {
             unsetEnvironmentVariable(std::string{"IRIS_DEVICE_MP_" + std::to_string(i)});
         }
-        for (auto i = 0; i < modelCounts[5]; ++i) {
+        for (std::size_t i = 0; i < modelCounts[5]; ++i) {
             unsetEnvironmentVariable(std::string{"IRIS_DEVICE_HEX_" + std::to_string(i)});
         }
     }
@@ -60,9 +60,13 @@ namespace irise {
         }
 
         auto envVarName = envVarPrefix + envVarModel + std::to_string(modelCounts[modelCountIndex]);
-        auto envVarValue = std::to_string(device->devno());
+        
+        auto totalModelCount = 0;
+        for (auto i = 0; i < 6; ++i) {
+            totalModelCount += modelCounts[i];
+        } 
 
-        setEnvironmentVariable(envVarName, envVarValue);
+        setEnvironmentVariable(envVarName, std::to_string(totalModelCount));
         modelCounts[modelCountIndex]++;
     }
 }

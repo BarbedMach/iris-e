@@ -22,6 +22,6 @@ namespace irise {
             Devices() = default;
             
             std::vector<iris::rt::Device*> deviceList{};
-            std::vector<std::size_t> modelCounts{ 6 };
+            std::size_t modelCounts[6] = {0, 0, 0, 0, 0, 0};
     };
 }
