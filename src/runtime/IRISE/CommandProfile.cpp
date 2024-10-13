@@ -25,5 +25,8 @@ namespace irise {
         cmdPolicy = policyToString(command->task()->brs_policy());
         deviceName = command->task()->dev()->name();
         deviceId = command->task()->dev()->devno();
+
+        std::cout << "Command Profile\n"
+        << "Name: " << cmdName << " Type: " << cmdType << " WorkSize: " << workSize << " Duration: " << std::to_string(duration.count()) << "ns Device: " << deviceName << " : " << deviceId << " Policy: " << cmdPolicy << std::endl;
     }
 }
