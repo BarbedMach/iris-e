@@ -2,6 +2,7 @@
 #define BRISBANE_SRC_RT_SCHEDULING_HISTORY_H
 
 #include "Profiler.h"
+#include "IRISE/Profiler.hpp"
 #include <set>
 
 namespace iris {

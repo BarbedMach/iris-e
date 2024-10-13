@@ -2,6 +2,7 @@
 
 #include "../Platform.h"
 #include "../Task.h"
+#include "../Command.h"
 #include "CommandProfile.hpp"
 #include <string>
 #include <vector>
@@ -14,6 +15,8 @@ namespace irise {
             
             static Profiler& instance();
             void setPlatform(iris::rt::Platform* platform);
+
+            void profileCommand(iris::rt::Command* command);
 
         private:
             Profiler() = default;

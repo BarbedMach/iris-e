@@ -72,6 +72,9 @@ int SchedulingHistory::CompleteCommand(Command* command) {
   char s[512];
   size_t ksize  = command->type_kernel() ? command->ws() : command->size();//
 
+  irise::Profiler::instance().setPlatform(platform_);
+  irise::Profiler::instance().profileCommand(command);
+
   sprintf(s, "%s,%s,%f,%f,%f,%zu,%s,%s #%i\n",command->name(),command->type_name(),command->time_start(),command->time_end(),command->time_duration(),ksize,policy_str(command->task()->brs_policy()),command->task()->dev()->name(),command->task()->dev()->devno());
   Write(s);
   return IRIS_SUCCESS;
