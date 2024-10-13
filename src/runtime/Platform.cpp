@@ -80,7 +80,7 @@ Platform::Platform() {
   present_table_ = NULL;
   recording_ = false;
   enable_profiler_ = getenv("IRIS_PROFILE");
-  enable_scheduling_history_ = getenv("IRIS_HISTORY");
+  enable_scheduling_history_ = 1;
   nprofilers_ = 0;
   time_app_ = 0.0;
   time_init_ = 0.0;
