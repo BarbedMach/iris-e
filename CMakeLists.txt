@@ -1,7 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.15)
 
 project(IRIS)
 include(GNUInstallDirs)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(IRIS_VERSION_MAJOR 1)
 set(IRIS_VERSION_MINOR 0)

@@ -402,6 +402,9 @@ int Platform::InitCUDA() {
     devs_[ndevs_] = new DeviceCUDA(loaderCUDA_, loaderHost2CUDA_, dev, ndevs_, nplatforms_);
     arch_available_ |= devs_[ndevs_]->type();
     cudevs[i] = dev;
+
+    irise::Devices::instance().registerDevice(devs_[ndevs_]);
+
     ndevs_++;
     mdevs++;
 #ifdef ENABLE_SINGLE_DEVICE_PER_CU
@@ -464,6 +467,9 @@ int Platform::InitHIP() {
     hipdevs[i] = dev;
     devs_[ndevs_] = new DeviceHIP(loaderHIP_, loaderHost2HIP_, dev, i, ndevs_, nplatforms_);
     arch_available_ |= devs_[ndevs_]->type();
+
+    irise::Devices::instance().registerDevice(devs_[ndevs_]);
+
     ndevs_++;
     mdevs++;
 #ifdef ENABLE_SINGLE_DEVICE_PER_CU
@@ -536,6 +542,9 @@ int Platform::InitLevelZero() {
   for (uint32_t i = 0; i < ndevs; i++) {
     devs_[ndevs_] = new DeviceLevelZero(loaderLevelZero_, devs[i], zectx, driver, ndevs_, nplatforms_);
     arch_available_ |= devs_[ndevs_]->type();
+
+    irise::Devices::instance().registerDevice(devs_[ndevs_]);
+
     ndevs_++; mdevs++;
   }
   if (ndevs) {
@@ -561,6 +570,9 @@ int Platform::InitOpenMP() {
   _trace("OpenMP platform[%d] ndevs[%d]", nplatforms_, 1);
   devs_[ndevs_] = new DeviceOpenMP(loaderOpenMP_, ndevs_, nplatforms_);
   arch_available_ |= devs_[ndevs_]->type();
+
+  irise::Devices::instance().registerDevice(devs_[ndevs_]);
+
   ndevs_++;
   strcpy(platform_names_[nplatforms_], "OpenMP");
   first_dev_of_type_[nplatforms_] = devs_[ndevs_-1];
@@ -584,6 +596,9 @@ int Platform::InitHexagon() {
   _trace("Hexagon platform[%d] ndevs[%d]", nplatforms_, 1);
   devs_[ndevs_] = new DeviceHexagon(loaderHexagon_, ndevs_, nplatforms_);
   arch_available_ |= devs_[ndevs_]->type();
+
+  irise::Devices::instance().registerDevice(devs_[ndevs_]);
+
   ndevs_++;
   strcpy(platform_names_[nplatforms_], "Hexagon");
   first_dev_of_type_[nplatforms_] = devs_[ndevs_-1];
@@ -653,6 +668,9 @@ int Platform::InitOpenCL() {
       loaderHost2OpenCL_.push_back(loaderHost2OpenCL);
       devs_[ndevs_] = new DeviceOpenCL(loaderOpenCL_, loaderHost2OpenCL, cl_devices[j], cl_contexts[i], ndevs_, ocldevno, nplatforms_);
       arch_available_ |= devs_[ndevs_]->type();
+
+      irise::Devices::instance().registerDevice(devs_[ndevs_]);
+
       ndevs_++;
       mdevs++;
       ocldevno++;

@@ -6,6 +6,9 @@ include_directories(${IRIS_BIN_DIR}/runtime/rapidjson)
 
 configure_file(Config.h.in Config.h)
 
+file(GLOB IRISE_SOURCES "IRISE/*.cpp")
+file(GLOB IRISE_HEADERS "IRISE/*.hpp")
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable")
 if (CMAKE_VERSION VERSION_LESS "3.1")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -101,7 +104,9 @@ set(IRIS_RUNTIME_SOURCES
   Thread.cpp
   Timer.cpp
   Utils.cpp
-  Worker.cpp)
+  Worker.cpp
+  ${IRISE_SOURCES}  
+)
 
 set(IRIS_RUNTIME_HEADERS
   Command.h
@@ -171,7 +176,9 @@ set(IRIS_RUNTIME_HEADERS
   Thread.h
   Timer.h
   Utils.h
-  Worker.h)
+  Worker.h
+  ${IRISE_HEADERS}  
+)
 
 if(USE_FORTRAN)
   MESSAGE(STATUS "USE_FORTRAN")

@@ -15,6 +15,8 @@
 #include "Config.h"
 #include "SchedulingHistory.h"
 #include "ObjectTrack.h"
+
+#include "IRISE/Devices.hpp"
 using namespace std;
 
 namespace iris {
