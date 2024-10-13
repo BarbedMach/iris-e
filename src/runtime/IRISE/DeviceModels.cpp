@@ -1,4 +1,5 @@
 #include "DeviceModels.hpp"
+#include "../Device.h"
 
 namespace irise::Device {
     DevModel model(iris::rt::Device *device) {

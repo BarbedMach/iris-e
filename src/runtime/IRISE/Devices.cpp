@@ -1,3 +1,4 @@
+#include "../Device.h"
 #include "Devices.hpp"
 
 namespace irise {

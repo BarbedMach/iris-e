@@ -3,8 +3,13 @@
 #include <string>
 #include <chrono>
 #include <cstddef>
-#include "../Command.h"
 #include "Policies.hpp"
+
+namespace iris::rt {
+    class Command;
+    class Task;
+    class Device;
+}
 
 namespace irise {
     using namespace std::chrono;

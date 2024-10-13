@@ -5,8 +5,11 @@
 #include <cstddef>
 #include <string>
 #include <iostream>
-#include "../Device.h"
 #include "DeviceModels.hpp"
+
+namespace iris::rt {
+    class Device;
+}
 
 namespace irise {
     class Devices {

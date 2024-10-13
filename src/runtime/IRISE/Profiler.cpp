@@ -1,3 +1,4 @@
+#include "../Command.h"
 #include "Profiler.hpp"
 
 namespace irise {

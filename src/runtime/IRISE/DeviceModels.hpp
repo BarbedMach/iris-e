@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../Device.h"
+namespace iris::rt {
+    class Device;
+}
 
 namespace irise {
     enum class DevModel {

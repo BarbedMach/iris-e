@@ -1,4 +1,7 @@
 #include "CommandProfile.hpp"
+#include "../Device.h"
+#include "../Command.h"
+#include "../Task.h"
 
 namespace irise {
     CommandProfile::CommandProfile(iris::rt::Command* command) : command(command) {

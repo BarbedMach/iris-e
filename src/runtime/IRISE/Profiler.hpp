@@ -1,9 +1,12 @@
 #pragma once
 
-#include "../Command.h"
 #include "CommandProfile.hpp"
 #include <string>
 #include <vector>
+
+namespace iris::rt {
+    class Command;
+}
 
 namespace irise {
     class Profiler {
