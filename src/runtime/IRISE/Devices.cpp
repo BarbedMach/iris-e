@@ -68,5 +68,6 @@ namespace irise {
 
         setEnvironmentVariable(envVarName, std::to_string(totalModelCount));
         modelCounts[modelCountIndex]++;
+        std::cout << "Device number: " << device->devno() << std::endl;
     }
 }
