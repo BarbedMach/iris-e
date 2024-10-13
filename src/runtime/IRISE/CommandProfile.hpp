@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <chrono>
 #include <cstddef>
 #include "Policies.hpp"
 
@@ -12,7 +11,6 @@ namespace iris::rt {
 }
 
 namespace irise {
-    using namespace std::chrono;
     class CommandProfile {
         public:
             CommandProfile(iris::rt::Command* command);
@@ -24,9 +22,9 @@ namespace irise {
             
             std::string cmdName{};
             std::string cmdType{};
-            time_point<system_clock, nanoseconds> startTime{};
-            time_point<system_clock, nanoseconds> endTime{};
-            nanoseconds duration{};
+            double startTime{};
+            double endTime{};
+            double duration{};
             std::size_t workSize{};
             std::string cmdPolicy{};
             std::string deviceName{};
