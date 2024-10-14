@@ -2,6 +2,7 @@
 
 #include <string>
 #include <cstddef>
+#include <iostream>
 #include "Policies.hpp"
 
 namespace iris::rt {
@@ -20,6 +21,8 @@ namespace irise {
 
             bool operator==(const CommandProfile& other) const;
             bool operator<(const CommandProfile& other) const;
+
+            friend std::ostream& operator<<(std::ostream& os, const CommandProfile& cmdProfile);
         private:
             iris::rt::Command* command = nullptr;
             

@@ -20,9 +20,6 @@ namespace irise {
         cmdPolicy = policyToString(command->task()->brs_policy());
         deviceName = command->task()->dev()->name();
         deviceId = command->task()->dev()->devno();
-
-        std::cout << "Command Profile\n"
-        << "Name: " << cmdName << " Type: " << cmdType << " WorkSize: " << workSize << " Duration: " << duration << "µs Device: " << deviceName << " : " << deviceId << " Policy: " << cmdPolicy << std::endl;
     }
 
     bool CommandProfile::operator==(const CommandProfile& other) const {
@@ -34,5 +31,13 @@ namespace irise {
             return cmdName < other.cmdName;
         }
         return cmdType < other.cmdType;
+    }
+    
+    std::ostream &operator<<(std::ostream &os, const CommandProfile &cmdP) {
+        std::cout << "Command Profile\n"
+        << "Name: " << cmdP.cmdName << " Type: " << cmdP.cmdType << " WorkSize: " << cmdP.workSize 
+        << " Duration: " << cmdP.duration << "µs Device: " << cmdP.deviceName << " : " 
+        << cmdP.deviceId << " Policy: " << cmdP.cmdPolicy << std::endl;
+        return std::cout;
     }
 }

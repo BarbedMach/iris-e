@@ -10,7 +10,9 @@ namespace irise {
     void Profiler::profileCommand(iris::rt::Command* command) {
         auto commandProfile{ CommandProfile{command} };
         commandProfile.profile();
-
-        commandProfiles.insert(commandProfile);
+        auto result = commandProfiles.insert(commandProfile);
+        if (result.second) {
+            std::cout << commandProfile;
+        }
     }
 }

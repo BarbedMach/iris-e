@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CommandProfile.hpp"
+#include <iostream>
 #include <string>
 #include <set>
 
