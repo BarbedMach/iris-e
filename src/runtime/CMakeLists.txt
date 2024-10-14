@@ -10,11 +10,6 @@ file(GLOB IRISE_SOURCES "IRISE/*.cpp")
 file(GLOB IRISE_HEADERS "IRISE/*.hpp")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable")
-if (CMAKE_VERSION VERSION_LESS "3.1")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-else()
-  set(CMAKE_CXX_STANDARD 11)
-endif()
 if (COVERAGE)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 endif()
@@ -176,8 +171,7 @@ set(IRIS_RUNTIME_HEADERS
   Thread.h
   Timer.h
   Utils.h
-  Worker.h
-  ${IRISE_HEADERS}  
+  Worker.h  
 )
 
 if(USE_FORTRAN)
@@ -202,4 +196,8 @@ install(FILES
   ${IRIS_RUNTIME_HEADERS}
   ${IRIS_BIN_DIR}/runtime/Config.h
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/iris/rt)
+
+install(FILES
+  ${IRISE_HEADERS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/iris/rt/IRISE)
 
