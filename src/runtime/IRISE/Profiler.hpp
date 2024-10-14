@@ -2,7 +2,7 @@
 
 #include "CommandProfile.hpp"
 #include <string>
-#include <vector>
+#include <set>
 
 namespace iris::rt {
     class Command;
@@ -21,6 +21,6 @@ namespace irise {
         private:
             Profiler() = default;
 
-            std::vector<CommandProfile> commandProfiles{};
+            std::set<CommandProfile> commandProfiles{};
     };
 }

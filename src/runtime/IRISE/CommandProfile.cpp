@@ -24,4 +24,15 @@ namespace irise {
         std::cout << "Command Profile\n"
         << "Name: " << cmdName << " Type: " << cmdType << " WorkSize: " << workSize << " Duration: " << duration << "µs Device: " << deviceName << " : " << deviceId << " Policy: " << cmdPolicy << std::endl;
     }
+
+    bool CommandProfile::operator==(const CommandProfile& other) const {
+        return cmdName == other.cmdName && cmdType == other.cmdType;
+    }
+
+    bool CommandProfile::operator<(const CommandProfile& other) const {
+        if (cmdName != other.cmdName) {
+            return cmdName < other.cmdName;
+        }
+        return cmdType < other.cmdType;
+    }
 }

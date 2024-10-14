@@ -11,6 +11,6 @@ namespace irise {
         auto commandProfile{ CommandProfile{command} };
         commandProfile.profile();
 
-        commandProfiles.push_back(commandProfile);
+        commandProfiles.insert(commandProfile);
     }
 }

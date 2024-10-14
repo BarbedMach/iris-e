@@ -17,6 +17,9 @@ namespace irise {
             ~CommandProfile();
 
             void profile();
+
+            bool operator==(const CommandProfile& other) const;
+            bool operator<(const CommandProfile& other) const;
         private:
             iris::rt::Command* command = nullptr;
             
