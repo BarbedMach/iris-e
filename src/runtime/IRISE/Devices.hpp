@@ -11,6 +11,12 @@ namespace iris::rt {
     class Device;
 }
 
+#define iris_cuda               1
+#define iris_hip                3
+#define iris_levelzero          4
+#define iris_opencl             5
+#define iris_openmp             6
+
 namespace irise {
     class Devices {
         public:
