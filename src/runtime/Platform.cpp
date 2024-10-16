@@ -155,7 +155,7 @@ int Platform::Init(int* argc, char*** argv, int sync) {
   json_ = new JSON(this);
 
   EnvironmentInit();
-
+  
   char* logo = NULL;
   EnvironmentGet("LOGO", &logo, NULL);
   if (strcmp("on", logo) == 0) Utils::Logo(true);
