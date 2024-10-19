@@ -2,7 +2,7 @@
 #include "Client.hpp"
 
 auto main() -> int {
-    auto client{irise::Client{"tmp/irise_socket"}};
+    auto client{irise::Client{"/tmp/irise_socket"}};
 
     client.sendMessage(irise::Message{irise::MessageType::HELLO});
 
