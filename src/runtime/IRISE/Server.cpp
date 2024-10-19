@@ -10,7 +10,7 @@ auto Server::readFromClient(int clientSocket) -> std::string {
         ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer) - 1);
         if (bytesRead < 0) {
             std::cerr << "Server: Error reading from client socket." << std::endl;
-            return;
+            return "";
         } else if (bytesRead == 0) {
             break;
         }
@@ -37,7 +37,7 @@ auto Server::handleClient(int clientSocket) -> void {
     switch(messageType) {
         using enum MessageType;
         case HELLO: return writeToClient(clientSocket, Message{HELLO_ACK});
-        
+
     }
 }
 

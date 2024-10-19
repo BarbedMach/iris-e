@@ -135,6 +135,9 @@ Platform::~Platform() {
 }
 
 int Platform::Init(int* argc, char*** argv, int sync) {
+
+  irise::Server::instance("tmp/irise_socket");
+
   pthread_mutex_lock(&mutex_);
   if (init_) {
     pthread_mutex_unlock(&mutex_);

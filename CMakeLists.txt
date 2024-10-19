@@ -30,6 +30,12 @@ add_subdirectory(include)
 add_subdirectory(src)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/utils DESTINATION ${CMAKE_INSTALL_PREFIX}/.)
 
+add_subdirectory(src/runtime/IRISE/Client)
+
+set_target_properties(IRISE_Client PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
 add_custom_command(
   OUTPUT ${CMAKE_BINARY_DIR}/setup.source
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}

@@ -17,6 +17,7 @@
 #include "ObjectTrack.h"
 
 #include "IRISE/Devices.hpp"
+#include "IRISE/Server.hpp"
 using namespace std;
 
 namespace iris {

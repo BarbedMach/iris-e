@@ -19,6 +19,28 @@ enum class MessageType {
     KERNEL_DEVICE_PROFILING_RES
 };
 
+struct DeviceInfo {
+    int devNo;
+    int platformNo;
+    std::string vendor;
+    std::string name;
+    int type;
+    int model;
+
+    auto toJSON() const -> json;
+    static auto fromJSON(const json& json) -> DeviceInfo;
+};
+
+struct KernelInfo {
+    std::string name;
+    std::string taskName;
+    std::vector<int> devices;
+
+    auto toJSON() const -> json;
+    static auto fromJSON(const json& json) -> KernelInfo;
+};
+
+
 class Message {
     public:
         Message() = default;
@@ -45,28 +67,6 @@ class Message {
         MessageType messageType{};
         std::string body{};
 };
-
-struct DeviceInfo {
-    int devNo;
-    int platformNo;
-    std::string vendor;
-    std::string name;
-    int type;
-    int model;
-
-    auto toJSON() const -> json;
-    static auto fromJSON(const json& json) -> DeviceInfo;
-};
-
-struct KernelInfo {
-    std::string name;
-    std::string taskName;
-    std::vector<int> devices;
-
-    auto toJSON() const -> json;
-    static auto fromJSON(const json& json) -> KernelInfo;
-};
-
 
 
 } // namespace irise
