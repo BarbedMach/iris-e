@@ -2,6 +2,7 @@
 #include "Devices.hpp"
 
 namespace irise {
+    
     Devices& Devices::instance() {
         static Devices instance;
         return instance;
@@ -71,4 +72,5 @@ namespace irise {
         modelCounts[modelCountIndex]++;
         std::cout << "Device number: " << device->devno() << std::endl;
     }
-}
+
+}  // namepsace irise

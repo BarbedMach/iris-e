@@ -3,5 +3,7 @@
 #include <string>
 
 namespace irise {
-    std::string policyToString(int policy);
-}
+
+std::string policyToString(int policy);
+
+} // namepsace irise
