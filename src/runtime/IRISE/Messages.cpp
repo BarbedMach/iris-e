@@ -87,4 +87,24 @@ auto DeviceInfo::fromJSON(const json& json) -> DeviceInfo {
 
 Message::Message(const DeviceInfo& deviceInfo) : messageType(MessageType::DEV_INFO), body(deviceInfo.toJSON().dump()) {}
 
+auto KernelInfo::toJSON() const -> json {
+    return json{
+        {"name", name},
+        {"taskName", taskName},
+        {"devices", devices}
+    };
+}
+
+auto KernelInfo::fromJSON(const json& json) -> KernelInfo {
+    KernelInfo kernelInfo;
+    
+    kernelInfo.name = json.at("name").get<std::string>();
+    kernelInfo.taskName = json.at("taskName").get<std::string>();
+    kernelInfo.devices = json.at("devices").get<std::vector<int>>();
+
+    return kernelInfo;
+}
+
+Message::Message(const KernelInfo& KernelInfo) : messageType(MessageType::KERNEL_INFO), body(KernelInfo.toJSON().dump()) {}
+
 } // namespace irise

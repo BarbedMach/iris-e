@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "json.hpp"
 
 namespace irise {
@@ -23,6 +24,7 @@ class Message {
         Message() = default;
 
         Message(const DeviceInfo& deviceInfo);
+        Message(const KernelInfo& KernelInfo);
 
         static auto toString(MessageType messageType) -> std::string;
         static auto toMessageType(const std::string& messageTypeString) -> MessageType;
@@ -54,7 +56,12 @@ struct DeviceInfo {
 };
 
 struct KernelInfo {
+    std::string name;
+    std::string taskName;
+    std::vector<int> devices;
 
+    auto toJSON() const -> json;
+    static auto fromJSON(const json& json) -> KernelInfo;
 };
 
 
