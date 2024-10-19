@@ -101,6 +101,9 @@ Server::~Server() {
     if (serverSocket >= 0) {
         close(serverSocket);
     }
+    if (serverThread.joinable()) {
+        serverThread.join();
+    }
     unlink(socketPath.c_str());
 }
 
