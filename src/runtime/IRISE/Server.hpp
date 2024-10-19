@@ -8,6 +8,7 @@
 #include <thread>
 #include <mutex>
 #include <string>
+#include "Messages.hpp"
 
 namespace irise {
 
@@ -31,6 +32,9 @@ class Server {
 
         std::mutex mutex;
         std::thread serverThread;
+
+        auto readFromClient(int clientSocket) -> std::string;
+        auto writeToClient(int clientSocket, const std::string& message) -> void;
 
         auto loop() -> void;
         auto handleClient(int clientSocket) -> void;

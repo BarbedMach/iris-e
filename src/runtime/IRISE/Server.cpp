@@ -2,8 +2,43 @@
 
 namespace irise {
 
+auto Server::readFromClient(int clientSocket) -> std::string {
+    std::string incomingMessage{};
+    char buffer[256];
+
+    while(true) {
+        ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer) - 1);
+        if (bytesRead < 0) {
+            std::cerr << "Server: Error reading from client socket." << std::endl;
+            return;
+        } else if (bytesRead == 0) {
+            break;
+        }
+
+        incomingMessage.append(buffer, bytesRead);
+    }
+
+    return incomingMessage;
+}
+
+auto Server::writeToClient(int clientSocket, const std::string& message) -> void {
+    ssize_t bytesWritten = write(clientSocket, message.c_str(), message.size());
+    if (bytesWritten < 0) {
+        std::cerr << "Server: Error writing to client socket." << std::endl;
+    }
+}
+
 auto Server::handleClient(int clientSocket) -> void {
-    
+    auto clientMessage = readFromClient(clientSocket);
+
+    auto clientMessageAsJSON = Message::fromJSON(clientMessage);
+    auto messageType = clientMessageAsJSON.getMessageType();
+
+    switch(messageType) {
+        using enum MessageType;
+        case HELLO: return writeToClient(clientSocket, Message{HELLO_ACK});
+        
+    }
 }
 
 auto Server::loop() -> void {

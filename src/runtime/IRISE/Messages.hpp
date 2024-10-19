@@ -23,6 +23,7 @@ class Message {
     public:
         Message() = default;
 
+        Message(MessageType messageType);
         Message(const DeviceInfo& deviceInfo);
         Message(const KernelInfo& KernelInfo);
 
@@ -37,6 +38,8 @@ class Message {
 
         auto getMessageType() const -> MessageType;
         auto getBody() const -> std::string;
+
+        operator std::string() const;
 
     private:
         MessageType messageType{};

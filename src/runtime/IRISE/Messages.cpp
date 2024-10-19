@@ -31,6 +31,8 @@ auto Message::toMessageType(const std::string& messageTypeString) -> MessageType
     return UNKNOWN;
 }
 
+Message::Message(MessageType messageType) : messageType(messageType), body("") {}
+
 auto Message::setMessageType(MessageType messageType) -> void {
     this->messageType = messageType;
 }
@@ -59,6 +61,10 @@ auto Message::getMessageType() const -> MessageType {
 
 auto Message::getBody() const -> std::string {
     return body;
+}
+
+Message::operator std::string() const {
+    return toJSON().dump();
 }
 
 auto DeviceInfo::toJSON() const -> json {
