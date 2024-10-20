@@ -33,7 +33,7 @@ class Client {
         auto setState(ClientState nextState) -> void;
 
     private:
-        ClientState state{ Start };
+        ClientState state{ irise::ClientState::Start };
 
         std::string socketPath;
         int clientSocket{ -1 };
