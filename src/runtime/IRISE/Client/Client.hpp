@@ -16,8 +16,9 @@ class Client {
         Client(const std::string& socketPath);
         ~Client() = default;
 
-        auto sendMessage(const std::string& message) const -> void;
-        auto receiveMessage() const -> std::string;
+        auto reconnect() -> void;
+        auto sendMessage(const std::string& message) -> void;
+        auto receiveMessage() -> std::string;
 
     private:
         std::string socketPath;
