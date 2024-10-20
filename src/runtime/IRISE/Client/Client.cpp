@@ -96,4 +96,34 @@ auto Client::handleMessage(const std::string& response) -> void {
     }
 }
 
+auto Client::main() -> void {
+    try {
+        connect();
+    } catch(const std::exception& e) {
+        std::cerr << "Error connecting to client. Details: " << e.what() << std::endl;
+    }
+
+    while (true) {
+        try {
+            if (getState() == irise::ClientState::Start || getState() == irise::ClientState::Connected) {
+                sendMessage(irise::Message{irise::MessageType::HELLO});
+                std::cout << "Sent HELLO to server." << std::endl;
+            }
+
+            std::string response = receiveMessage();
+            if (!response.empty()) {
+                std::cout << "Response from server: " << response << std::endl;
+                handleMessage(response);
+            } else {
+                std::cerr << "No response received. The server may be down." << std::endl;
+            }
+
+        } catch(const std::exception& e) {
+            std::cerr << "Error during communication. Details: " << e.what() << std::endl;
+        }
+
+        sleep(1);
+    }
+}
+
 } // namespace irise
