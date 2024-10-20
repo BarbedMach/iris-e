@@ -14,7 +14,7 @@ namespace irise {
 class Client {
     public:
         Client(const std::string& socketPath);
-        ~Client();
+        ~Client() = default;
 
         auto sendMessage(const std::string& message) const -> void;
         auto receiveMessage() const -> std::string;

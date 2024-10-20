@@ -25,13 +25,6 @@ Client::Client(const std::string& socketPath) : socketPath(socketPath), clientSo
     std::cout << "Client connected to server at: " << socketPath << std::endl;
 }
 
-Client::~Client() {
-    if (clientSocket >= 0) {
-        close(clientSocket);
-    }
-    std::cout << "Client: Connection closed." << std::endl;
-}
-
 auto Client::sendMessage(const std::string& message) const -> void {
     ssize_t bytesSent = write(clientSocket, message.c_str(), message.size());
     if (bytesSent < 0) {
