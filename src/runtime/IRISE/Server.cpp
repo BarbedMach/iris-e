@@ -85,7 +85,6 @@ auto Server::loop() -> void {
         fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
 
         handleClient(clientSocket);
-        close(clientSocket);
     }
 }
 
