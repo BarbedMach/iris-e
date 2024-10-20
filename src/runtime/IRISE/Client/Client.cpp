@@ -10,7 +10,7 @@ auto Client::sendMessage(const std::string& message) -> void {
     if (bytesSent < 0) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             std::cerr << "Client: Socket is not ready for writing." << std::endl;
-            // Handle the situation, e.g., retry later or return
+            reconnect();
         } else {
             throw std::runtime_error("Client: failed to send message.");
         }

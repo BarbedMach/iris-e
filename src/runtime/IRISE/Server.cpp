@@ -27,36 +27,42 @@ auto Server::writeToClient(int clientSocket, const std::string& message) -> void
 }
 
 auto Server::handleClient(int clientSocket) -> void {
-    auto clientMessage = readFromClient(clientSocket);
-    std::cout << "Server received message: " << clientMessage << std::endl; // Debug output
+    while(true) {
+        auto clientMessage = readFromClient(clientSocket);
+        std::cout << "Server received message: " << clientMessage << std::endl; // Debug output
 
-    auto message = Message::fromJSONString(clientMessage);
-    auto messageType = message.getMessageType();
-
-    std::cout << "Message type is : " << Message::toString(messageType) << std::endl;
-
-    {
-        std::cout << "Entered the lock guard for conditionMutex!" << std::endl;
-        auto lock{ std::lock_guard<std::mutex>{ conditionMutex } };
-        std::cout << "Lock guard for conditionMutex passed" << std::endl;
-
-        switch(messageType) {
-            using enum MessageType;
-            std::cout << "Message type switch entered." << std::endl;
-            case HELLO:
-                std::cout << "HELLO case reached!" << std::endl;
-                writeToClient(clientSocket, Message{HELLO_ACK});
-                std::cout << "Server sent HELLO_ACK" << std::endl; // Debug output
-
-                helloAcknowledged = true;
-                helloReceivedCondition.notify_one();
-                break; // Use break instead of default
-            default:
-                writeToClient(clientSocket, Message{UNKNOWN});
-                std::cout << "Server sent UNKNOWN response" << std::endl; // Debug output
-                break;
+        if (clientMessage.empty()) {
+            break;
         }
-    }
+
+        auto message = Message::fromJSONString(clientMessage);
+        auto messageType = message.getMessageType();
+
+        std::cout << "Message type is : " << Message::toString(messageType) << std::endl;
+
+        {
+            std::cout << "Entered the lock guard for conditionMutex!" << std::endl;
+            auto lock{ std::lock_guard<std::mutex>{ conditionMutex } };
+            std::cout << "Lock guard for conditionMutex passed" << std::endl;
+
+            switch(messageType) {
+                using enum MessageType;
+                std::cout << "Message type switch entered." << std::endl;
+                case HELLO:
+                    std::cout << "HELLO case reached!" << std::endl;
+                    writeToClient(clientSocket, Message{HELLO_ACK});
+                    std::cout << "Server sent HELLO_ACK" << std::endl; // Debug output
+
+                    helloAcknowledged = true;
+                    helloReceivedCondition.notify_one();
+                    break; // Use break instead of default
+                default:
+                    writeToClient(clientSocket, Message{UNKNOWN});
+                    std::cout << "Server sent UNKNOWN response" << std::endl; // Debug output
+                    break;
+            }
+        }
+        }
 }
 
 auto Server::loop() -> void {
