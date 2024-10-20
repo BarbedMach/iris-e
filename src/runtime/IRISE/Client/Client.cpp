@@ -61,4 +61,33 @@ auto Client::setState(ClientState nextState) -> void {
     state = nextState;
 }
 
+auto Client::sendDeviceInfoACK() -> void {
+    sendMessage(Message{MessageType::ACK});
+}
+
+auto Client::handleMessage(const std::string& response) -> void {
+    auto serverMessage = irise::Message::fromJSONString(response);
+
+    switch (serverMessage.getMessageType()) {
+        case MessageType::HELLO_ACK:
+            std::cout << "Received HELLO_ACK from server." << std::endl;
+            setState(ClientState::Ready);
+            break;
+
+        case MessageType::DEV_INFO: {
+            std::cout << "Received Device Info from server." << std::endl;
+            DeviceInfo deviceInfo = DeviceInfo::fromJSON(serverMessage.getBody());
+            devices.push_back(deviceInfo);
+            setState(ClientState::DeviceInfo);
+            
+            sendDeviceInfoACK();
+            break;
+        }
+
+        default:
+            std::cerr << "Unhandled message type from server." << std::endl;
+            break;
+    }
+}
+
 } // namespace irise

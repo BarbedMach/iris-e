@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <fcntl.h>
+#include <vector>
 #include "../Messages.hpp"
 
 namespace irise {
@@ -29,14 +30,20 @@ class Client {
         auto sendMessage(const std::string& message) -> void;
         auto receiveMessage() -> std::string;
 
+        auto handleMessage(const std::string& message) -> void;
+
         auto getState() -> ClientState;
         auto setState(ClientState nextState) -> void;
+
+        auto sendDeviceInfoACK() -> void;
 
     private:
         ClientState state{ irise::ClientState::Start };
 
         std::string socketPath;
         int clientSocket{ -1 };
+
+        std::vector<DeviceInfo> devices{};
 };
 
 
