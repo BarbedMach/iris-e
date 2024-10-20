@@ -37,8 +37,6 @@ public:
 
     auto sendDeviceInfoACK() -> void;
 
-    auto main() -> void;
-
 private:
     ClientState state{ irise::ClientState::Start };
 
