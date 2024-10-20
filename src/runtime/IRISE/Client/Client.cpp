@@ -53,6 +53,12 @@ auto Client::receiveMessage() -> std::string {
     return incomingMessage;
 }
 
+auto Client::getState() -> ClientState {
+    return state;
+}
 
+auto Client::setState(ClientState nextState) -> void {
+    state = nextState;
+}
 
 } // namespace irise

@@ -29,6 +29,9 @@ class Client {
         auto sendMessage(const std::string& message) -> void;
         auto receiveMessage() -> std::string;
 
+        auto getState() -> ClientState;
+        auto setState(ClientState nextState) -> void;
+
     private:
         ClientState state{ Start };
 
