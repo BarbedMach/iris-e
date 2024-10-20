@@ -15,7 +15,7 @@ Client::Client(const std::string& socketPath) : socketPath(socketPath), clientSo
         throw std::runtime_error("Client: connection to server failed.");
     }
 
-    std::cout << "Client connecto to server at: " << socketPath << std::endl;
+    std::cout << "Client connected to server at: " << socketPath << std::endl;
 }
 
 Client::~Client() {

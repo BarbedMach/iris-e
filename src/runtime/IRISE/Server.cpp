@@ -30,24 +30,28 @@ auto Server::writeToClient(int clientSocket, const std::string& message) -> void
 
 auto Server::handleClient(int clientSocket) -> void {
     auto clientMessage = readFromClient(clientSocket);
+    std::cout << "Server received message: " << clientMessage << std::endl; // Debug output
 
     auto clientMessageAsJSON = Message::fromJSON(clientMessage);
     auto messageType = clientMessageAsJSON.getMessageType();
 
     {
         auto lock{ std::lock_guard<std::mutex>{ conditionMutex } };
-        
-        switch(messageType) {
-        using enum MessageType;
-        case HELLO:
-            writeToClient(clientSocket, Message{HELLO_ACK});
-            
-            helloAcknowledged = true;
-            helloReceivedCondition.notify_one();
-            
-        default: return writeToClient(clientSocket, Message{UNKNOWN});
-    }
 
+        switch(messageType) {
+            using enum MessageType;
+            case HELLO:
+                writeToClient(clientSocket, Message{HELLO_ACK});
+                std::cout << "Server sent HELLO_ACK" << std::endl; // Debug output
+
+                helloAcknowledged = true;
+                helloReceivedCondition.notify_one();
+                break; // Use break instead of default
+            default:
+                writeToClient(clientSocket, Message{UNKNOWN});
+                std::cout << "Server sent UNKNOWN response" << std::endl; // Debug output
+                break;
+        }
     }
 }
 
