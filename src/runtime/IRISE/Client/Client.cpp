@@ -39,7 +39,6 @@ auto Client::reconnect() -> void {
 }
 
 auto Client::receiveMessage() -> std::string {
-    reconnect();
     std::string incomingMessage{};
     char buffer[256];
 
