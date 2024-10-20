@@ -32,7 +32,7 @@ auto Server::handleClient(int clientSocket) -> void {
     auto clientMessage = readFromClient(clientSocket);
     std::cout << "Server received message: " << clientMessage << std::endl; // Debug output
 
-    auto clientMessageAsJSON = Message::fromJSON(clientMessage);
+    auto clientMessageAsJSON = Message::fromJSONString(clientMessage);
     auto messageType = clientMessageAsJSON.getMessageType();
 
     {
