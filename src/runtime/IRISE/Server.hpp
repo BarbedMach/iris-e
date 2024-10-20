@@ -30,6 +30,7 @@ class Server {
         Server(const std::string& socketPath);
 
         int serverSocket;
+        int clientSocket;
         std::string socketPath;
 
         bool running{ false };
@@ -41,11 +42,11 @@ class Server {
         std::mutex conditionMutex;
         std::condition_variable helloReceivedCondition;
 
-        auto readFromClient(int clientSocket) -> std::string;
-        auto writeToClient(int clientSocket, const std::string& message) -> void;
+        auto readFromClient() -> std::string;
+        auto writeToClient(const std::string& message) -> void;
 
         auto loop() -> void;
-        auto handleClient(int clientSocket) -> void;
+        auto handleClient() -> void;
 };
 
 } // namespace irise
