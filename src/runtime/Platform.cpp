@@ -1839,6 +1839,7 @@ int Platform::GetGraphTasks(iris_graph brs_graph, iris_task *tasks) {
 }
 
 int Platform::Finalize() {
+  irise::Server::instance().~Server();
   pthread_mutex_lock(&mutex_);
   if (finalize_) {
     pthread_mutex_unlock(&mutex_);
