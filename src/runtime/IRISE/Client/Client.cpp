@@ -39,19 +39,16 @@ auto Client::receiveMessage() -> std::string {
     ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer) - 1);
     if (bytesRead < 0) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
-            // No more data available
-            return incomingMessage; // Return what we have
+            return incomingMessage;
         }
         throw std::runtime_error("Client: Error reading from client socket.");
     } else if (bytesRead == 0) {
-        // Connection closed
         std::cerr << "Client: Connection closed by server." << std::endl;
-        // Optionally, you can reset the socket here or trigger a reconnect
-        return incomingMessage; // Return what we have
+        return incomingMessage;
     }
 
     incomingMessage.append(buffer, bytesRead);
-    return incomingMessage; // Return the complete message received
+    return incomingMessage;
 }
 
 
