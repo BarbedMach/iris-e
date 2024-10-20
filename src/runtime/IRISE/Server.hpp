@@ -15,6 +15,15 @@
 
 namespace irise {
 
+enum class ServerState {
+    Start,
+    Connected,
+    Ready,
+    DeviceInfo,
+    KernelInfo,
+    MappingProfilingLoop
+};
+
 class Server {
     public:
         Server(const Server&) = delete;
@@ -28,6 +37,8 @@ class Server {
         auto waitForHello() -> void;
     private:
         Server(const std::string& socketPath);
+
+        ServerState state{ ServerState::Start };
 
         int serverSocket;
         int clientSocket{ -1 };

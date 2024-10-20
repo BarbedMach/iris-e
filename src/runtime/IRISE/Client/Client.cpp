@@ -4,17 +4,6 @@ namespace irise {
 
 Client::Client(const std::string& socketPath) : socketPath(socketPath), clientSocket(socket(AF_UNIX, SOCK_STREAM, 0)) {}
 
-auto Client::sendMessage(const std::string& message) -> void {
-    ssize_t bytesSent = write(clientSocket, message.c_str(), message.size());
-    if (bytesSent < 0) {
-        if (errno == EAGAIN || errno == EWOULDBLOCK) {
-            std::cerr << "Client: Socket is not ready for writing." << std::endl;
-        } else {
-            throw std::runtime_error("Client: failed to send message.");
-        }
-    }
-}
-
 auto Client::connect() -> void {
     clientSocket = socket(AF_UNIX, SOCK_STREAM, 0);
     if (clientSocket < 0) {
@@ -30,6 +19,19 @@ auto Client::connect() -> void {
     }
 
     std::cout << "Client connected to server at: " << socketPath << std::endl;
+
+    state = ClientState::Connected;
+}
+
+auto Client::sendMessage(const std::string& message) -> void {
+    ssize_t bytesSent = write(clientSocket, message.c_str(), message.size());
+    if (bytesSent < 0) {
+        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+            std::cerr << "Client: Socket is not ready for writing." << std::endl;
+        } else {
+            throw std::runtime_error("Client: failed to send message.");
+        }
+    }
 }
 
 auto Client::receiveMessage() -> std::string {

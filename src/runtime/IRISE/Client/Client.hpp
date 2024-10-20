@@ -11,6 +11,15 @@
 
 namespace irise {
 
+enum class ClientState {
+    Start,
+    Connected,
+    Ready,
+    DeviceInfo,
+    KernelInfo,
+    MappingProfilingLoop
+};
+
 class Client {
     public:
         Client(const std::string& socketPath);
@@ -21,6 +30,8 @@ class Client {
         auto receiveMessage() -> std::string;
 
     private:
+        ClientState state{ Start };
+
         std::string socketPath;
         int clientSocket{ -1 };
 };

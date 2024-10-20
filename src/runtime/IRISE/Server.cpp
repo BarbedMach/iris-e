@@ -118,6 +118,8 @@ Server::Server(const std::string& socketPath) : serverSocket(socket(AF_UNIX, SOC
 
         int flags = fcntl(clientSocket, F_GETFL, 0);
         fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
+
+        state = ServerState::Connected;
     }
 
     serverThread = std::thread(&Server::loop, this);
