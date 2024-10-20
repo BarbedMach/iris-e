@@ -74,6 +74,9 @@ auto Server::loop() -> void {
             continue;
         }
 
+        int flags = fcntl(clientSocket, F_GETFL, 0);
+        fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
+
         handleClient(clientSocket);
         close(clientSocket);
     }
