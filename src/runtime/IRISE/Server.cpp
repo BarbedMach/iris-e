@@ -18,6 +18,7 @@ auto Server::readFromClient(int clientSocket) -> std::string {
 }
 
 auto Server::writeToClient(int clientSocket, const std::string& message) -> void {
+    std::cout << "To client [" << clientSocket << "] : '" << message << "'" << std::endl;
     ssize_t bytesWritten = write(clientSocket, message.c_str(), message.size());
     if (bytesWritten < 0 && (errno != EAGAIN && errno != EWOULDBLOCK)) {
         std::cerr << "Server: Error writing to client socket." << std::endl;
