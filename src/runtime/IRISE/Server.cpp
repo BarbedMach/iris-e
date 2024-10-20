@@ -9,9 +9,8 @@ auto Server::readFromClient(int clientSocket) -> std::string {
     while(true) {
         ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer) - 1);
         if (bytesRead < 0) {
-            if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                break;
-            }
+            std::cerr << "Server: Error reading from client socket." << std::endl;
+            return "";
         } else if (bytesRead == 0) {
             break;
         }
@@ -25,9 +24,7 @@ auto Server::readFromClient(int clientSocket) -> std::string {
 auto Server::writeToClient(int clientSocket, const std::string& message) -> void {
     ssize_t bytesWritten = write(clientSocket, message.c_str(), message.size());
     if (bytesWritten < 0) {
-        if (errno != EAGAIN && errno != EWOULDBLOCK) {
-            std::cerr << "Server: Error writing to client socket." << std::endl;
-        }
+        std::cerr << "Server: Error writing to client socket." << std::endl;
     }
 }
 
@@ -49,7 +46,7 @@ auto Server::handleClient(int clientSocket) -> void {
 
                 helloAcknowledged = true;
                 helloReceivedCondition.notify_one();
-                break;
+                break; // Use break instead of default
             default:
                 writeToClient(clientSocket, Message{UNKNOWN});
                 std::cout << "Server sent UNKNOWN response" << std::endl; // Debug output
@@ -89,14 +86,6 @@ auto Server::instance() -> Server& {
 Server::Server(const std::string& socketPath) : serverSocket(socket(AF_UNIX, SOCK_STREAM, 0)), socketPath(socketPath) {
     if (serverSocket < 0) {
         throw std::runtime_error("Server: socket creation failed.");
-    }
-
-    int flags = fcntl(serverSocket, F_GETFL, 0);
-    if (flags == -1) {
-        throw std::runtime_error("Server: fcntl failed to get flags.");
-    }
-    if (fcntl(serverSocket, F_SETFL, flags | O_NONBLOCK) == -1) {
-        throw std::runtime_error("Server: fcntl fialed to set non-blocking.");
     }
 
     sockaddr_un serverAddr;
