@@ -29,11 +29,10 @@ auto Server::writeToClient(int clientSocket, const std::string& message) -> void
 auto Server::handleClient(int clientSocket) -> void {
     while(true) {
         auto clientMessage = readFromClient(clientSocket);
-        std::cout << "Server received message: " << clientMessage << std::endl; // Debug output
-
         if (clientMessage.empty()) {
             break;
         }
+        std::cout << "Server received message: " << clientMessage << std::endl; // Debug output
 
         auto message = Message::fromJSONString(clientMessage);
         auto messageType = message.getMessageType();

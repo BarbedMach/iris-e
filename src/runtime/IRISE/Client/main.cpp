@@ -15,6 +15,7 @@ auto main() -> int {
         client.connect();
     } catch(const std::exception& e) {
         std::cerr << "Error connecting to client. Details: " << e.what() << std::endl;
+        return 1; // Exit if we can't connect
     }
 
     // Start the client loop
@@ -26,15 +27,13 @@ auto main() -> int {
             std::cout << "Error sending message. Details: " << e.what() << std::endl;
         }
 
-        // Wait for a response in a loop
-        std::string response;
-        try {
-            response = client.receiveMessage();
-            if (!response.empty()) {
-                std::cout << "Response from server: " << response << std::endl;
-            }
-        } catch(const std::exception& e) {
-            std::cout << "Error receiving message. Details: " << e.what() << std::endl;
+        // Wait for a response
+        std::string response = client.receiveMessage();
+        if (!response.empty()) {
+            std::cout << "Response from server: " << response << std::endl;
+        } else {
+            std::cerr << "No response received. The server may be down." << std::endl;
+            // Here, you might implement logic to attempt to reconnect
         }
         
         std::this_thread::sleep_for(std::chrono::seconds(1)); // Send every second
