@@ -22,29 +22,28 @@ enum class ClientState {
 };
 
 class Client {
-    public:
-        Client(const std::string& socketPath);
-        ~Client() = default;
+public:
+    Client(const std::string& socketPath);
+    ~Client() = default;
 
-        auto connect() -> void;
-        auto sendMessage(const std::string& message) -> void;
-        auto receiveMessage() -> std::string;
+    auto connect() -> void;
+    auto sendMessage(const std::string& message) -> void;
+    auto receiveMessage() -> std::string;
 
-        auto handleMessage(const std::string& message) -> void;
+    auto handleMessage(const std::string& message) -> void;
 
-        auto getState() -> ClientState;
-        auto setState(ClientState nextState) -> void;
+    auto getState() -> ClientState;
+    auto setState(ClientState nextState) -> void;
 
-        auto sendDeviceInfoACK() -> void;
+    auto sendDeviceInfoACK() -> void;
 
-    private:
-        ClientState state{ irise::ClientState::Start };
+private:
+    ClientState state{ irise::ClientState::Start };
 
-        std::string socketPath;
-        int clientSocket{ -1 };
+    std::string socketPath;
+    int clientSocket{ -1 };
 
-        std::vector<DeviceInfo> devices{};
+    std::vector<DeviceInfo> devices{};
 };
-
 
 } // namespace irise

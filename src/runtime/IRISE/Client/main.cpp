@@ -25,7 +25,6 @@ auto main() -> int {
                 std::cout << "Sent HELLO to server." << std::endl;
             }
 
-            // Receive response from server
             std::string response = client.receiveMessage();
             if (!response.empty()) {
                 std::cout << "Response from server: " << response << std::endl;

@@ -76,11 +76,17 @@ auto Client::handleMessage(const std::string& response) -> void {
 
         case MessageType::DEV_INFO: {
             std::cout << "Received Device Info from server." << std::endl;
+
+            // Deserialize device info from JSON and append it to the vector
             DeviceInfo deviceInfo = DeviceInfo::fromJSON(serverMessage.getBody());
             devices.push_back(deviceInfo);
+
+            // Set the state to DeviceInfo
             setState(ClientState::DeviceInfo);
             
+            // Send ACK back to the server
             sendDeviceInfoACK();
+            std::cout << "ACK sent back to server." << std::endl;
             break;
         }
 
