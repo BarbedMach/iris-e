@@ -30,7 +30,7 @@ class Server {
         Server(const std::string& socketPath);
 
         int serverSocket;
-        int clientSocket;
+        int clientSocket{ -1 };
         std::string socketPath;
 
         bool running{ false };

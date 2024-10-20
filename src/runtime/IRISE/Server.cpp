@@ -73,19 +73,7 @@ auto Server::loop() -> void {
         }
         lock.unlock();
 
-        auto clientSocket = accept(serverSocket, nullptr, nullptr);
-        if (clientSocket < 0) {
-            std::cerr << "Server: accept failed. Retrying in 2 seconds..." << std::endl;
-            std::cout << "Client socket code: " << clientSocket << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(2));
-            continue;
-        }
-
-        int flags = fcntl(clientSocket, F_GETFL, 0);
-        fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
-
         handleClient(clientSocket);
-        close(clientSocket);
     }
 }
 
@@ -131,12 +119,30 @@ Server::Server(const std::string& socketPath) : serverSocket(socket(AF_UNIX, SOC
         running = true;
     }
 
+    auto clientFound{ false };
+    while(!clientFound) {
+        clientSocket = accept(serverSocket, nullptr, nullptr);
+        if (clientSocket < 0) {
+            std::cerr << "Server: accept failed. Retrying in 2 seconds..." << std::endl;
+            std::cout << "Client socket code: " << clientSocket << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            continue;
+        }
+        clientFound = true;
+
+        int flags = fcntl(clientSocket, F_GETFL, 0);
+        fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
+    }
+
     serverThread = std::thread(&Server::loop, this);
 }
 
 Server::~Server() {
     if (serverSocket >= 0) {
         close(serverSocket);
+    }
+    if (clientSocket >= 0) {
+        close(clientSocket);
     }
     if (serverThread.joinable()) {
         serverThread.join();

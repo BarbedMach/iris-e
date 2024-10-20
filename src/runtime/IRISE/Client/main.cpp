@@ -11,6 +11,12 @@ auto main() -> int {
 
     auto client{ irise::Client{socketPath} };
 
+    try {
+        client.connect();
+    } catch(const std::exception& e) {
+        std::cerr << "Error connecting to client. Details: " << e.what() << std::endl;
+    }
+
     // Start the client loop
     while (true) {
         try {
