@@ -146,4 +146,29 @@ auto KernelInfo::fromJSON(const json& json) -> KernelInfo {
 
 Message::Message(const KernelInfo& KernelInfo) : header(MessageType::KERNEL_INFO), body(KernelInfo.toJSON().dump()) {}
 
+auto KernelDeviceMapping::toJSON() const -> json {
+    return json{
+        {"device", device.toJSON()},
+        {"kernel", kernel.toJSON()}
+    };
+}
+
+auto KernelDeviceMapping::fromJSON(const json& jsonInput) -> KernelDeviceMapping {
+    KernelDeviceMapping mapping;
+    json parsedJson;
+
+    if (jsonInput.is_string()) {
+        parsedJson = nlohmann::json::parse(jsonInput.get<std::string>());
+    } else {
+        parsedJson = jsonInput;
+    }
+
+    mapping.device = DeviceInfo::fromJSON(parsedJson.at("device"));
+    mapping.kernel = KernelInfo::fromJSON(parsedJson.at("kernel"));
+
+    return mapping;
+}
+
+Message::Message(const KernelDeviceMapping& mapping) : header(MessageType::KERNEL_DEVICE_MAP), body(mapping.toJSON().dump()) {}
+
 } // namespace irise

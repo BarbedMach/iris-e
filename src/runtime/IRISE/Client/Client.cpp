@@ -100,11 +100,40 @@ auto Client::handleMessage(const std::string& response) -> void {
 
             sendACK();
             std::cout << "ACK sent back to server." << std::endl;
+            break;
+        }
+        case MessageType::ACK: {
+            std::cout << "ACK received from server." << std::endl;
+            break;
         }
 
         default:
             std::cerr << "Unhandled message type from server." << std::endl;
             break;
+    }
+}
+
+auto Client::mapKernelsToDevicesRandomly() -> std::vector<KernelDeviceMapping> {
+    std::vector<KernelDeviceMapping> mappings;
+
+    auto kernelsCopy = kernels;
+    auto devicesCopy = devices;
+
+    std::shuffle(devicesCopy.begin(), devicesCopy.end(), std::mt19937{ std::random_device{}() });
+
+    for (auto i = 0; i < kernelsCopy.size(); ++i) {
+        auto mapping{ KernelDeviceMapping{ devicesCopy[i], kernelsCopy[i] } };
+        mappings.push_back(mapping);
+    }
+
+    for (const auto& mapping : mappings) {
+        auto message = mapping.toJSON();
+
+        if (getState() == ClientState::KernelInfo) {
+            setState(ClientState::MappingProfilingLoop);
+        }
+
+        sendMessage(message.dump());
     }
 }
 

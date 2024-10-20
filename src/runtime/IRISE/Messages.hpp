@@ -39,6 +39,14 @@ struct KernelInfo {
     static auto fromJSON(const json& json) -> KernelInfo;
 };
 
+struct KernelDeviceMapping {
+    DeviceInfo device;
+    KernelInfo kernel;
+
+    auto toJSON() const -> json;
+    static auto fromJSON(const json& json) -> KernelDeviceMapping;
+};
+
 
 class Message {
     public:
@@ -47,6 +55,7 @@ class Message {
         Message(MessageType messageType);
         Message(const DeviceInfo& deviceInfo);
         Message(const KernelInfo& KernelInfo);
+        Message(const KernelDeviceMapping& mapping);
 
         Message(MessageType messageType, std::string body);
 

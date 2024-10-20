@@ -77,6 +77,11 @@ auto Server::handleClient() -> void {
                             messageAcknowledged.notify_one();
                             break;
 
+                        case MessageType::KERNEL_DEVICE_MAP:
+                            state = ServerState::MappingProfilingLoop;
+                            // irise::Scheduler::instance().setMapping();
+                            break;
+
                         default:
                             break;
                     }
