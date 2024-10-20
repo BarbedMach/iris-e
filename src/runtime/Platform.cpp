@@ -1036,6 +1036,14 @@ int Platform::TaskKernel(iris_task brs_task, const char* name, int dim, size_t* 
   kernel->set_task_name(task->name());
   Command* cmd = Command::CreateKernel(task, kernel, dim, off, gws, lws, nparams, params, params_off, params_info, memranges);
   task->AddCommand(cmd);
+
+  if (irise::Server::instance().getState() != irise::ServerState::KernelInfo) {
+    irise::Server::instance().setState(irise::ServerState::KernelInfo);
+  }
+
+  irise::KernelInfo kernelInfo{ kernel->name(), task->name() };
+  irise::Server::instance().sendKernelInfo(kernelInfo).waitForACK();
+
   return IRIS_SUCCESS;
 }
 

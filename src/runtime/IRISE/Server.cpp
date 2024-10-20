@@ -70,6 +70,18 @@ auto Server::handleClient() -> void {
                     }
                     break;
                 
+                case ServerState::KernelInfo:
+                    switch (message.getMessageType()) {
+                        case MessageType::ACK:
+                            acknowledged = true;
+                            messageAcknowledged.notify_one();
+                            break;
+
+                        default:
+                            break;
+                    }
+                    break;
+
                 default:
                     break;
                 
@@ -184,9 +196,16 @@ auto Server::waitForACK() -> void {
     acknowledged = false;
 }
 
-auto Server::sendDeviceInfo(DeviceInfo deviceInfo) -> void {
+auto Server::sendDeviceInfo(DeviceInfo deviceInfo) -> Server& {
     std::cout << "Device Info being sent!" << std::endl;
     writeToClient(Message{ deviceInfo });
+    return Server::instance();
+}
+
+auto Server::sendKernelInfo(KernelInfo kernelInfo) -> Server& {
+    std::cout << "Kernel Info being sent!" << std::endl;
+    writeToClient(Message{ kernelInfo });
+    return Server::instance();
 }
 
 } // namepsace irise

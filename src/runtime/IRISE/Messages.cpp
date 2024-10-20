@@ -123,8 +123,7 @@ Message::Message(const DeviceInfo& deviceInfo) : header(MessageType::DEV_INFO), 
 auto KernelInfo::toJSON() const -> json {
     return json{
         {"name", name},
-        {"taskName", taskName},
-        {"devices", devices}
+        {"taskName", taskName}
     };
 }
 
@@ -136,12 +135,10 @@ auto KernelInfo::fromJSON(const json& json) -> KernelInfo {
 
         kernelInfo.name = parsedJson.at("name").get<std::string>();
         kernelInfo.taskName = parsedJson.at("taskName").get<std::string>();
-        kernelInfo.devices = parsedJson.at("devices").get<std::vector<int>>();
     } else {
 
         kernelInfo.name = json.at("name").get<std::string>();
         kernelInfo.taskName = json.at("taskName").get<std::string>();
-        kernelInfo.devices = json.at("devices").get<std::vector<int>>();
     }
 
     return kernelInfo;

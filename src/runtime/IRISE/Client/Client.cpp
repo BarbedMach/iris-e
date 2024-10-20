@@ -61,7 +61,7 @@ auto Client::setState(ClientState nextState) -> void {
     state = nextState;
 }
 
-auto Client::sendDeviceInfoACK() -> void {
+auto Client::sendACK() -> void {
     sendMessage(Message{MessageType::ACK});
 }
 
@@ -85,9 +85,21 @@ auto Client::handleMessage(const std::string& response) -> void {
             setState(ClientState::DeviceInfo);
             
             // Send ACK back to the server
-            sendDeviceInfoACK();
+            sendACK();
             std::cout << "ACK sent back to server." << std::endl;
             break;
+        }
+
+        case MessageType::KERNEL_INFO: {
+            std::cout << "Received Device Info from server." << std::endl;
+
+            KernelInfo kernelInfo = KernelInfo::fromJSON(serverMessage.getBody());
+            kernels.push_back(kernelInfo);
+
+            setState(ClientState::KernelInfo);
+
+            sendACK();
+            std::cout << "ACK sent back to server." << std::endl;
         }
 
         default:

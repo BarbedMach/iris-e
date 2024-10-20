@@ -35,7 +35,7 @@ public:
     auto getState() -> ClientState;
     auto setState(ClientState nextState) -> void;
 
-    auto sendDeviceInfoACK() -> void;
+    auto sendACK() -> void;
 
 private:
     ClientState state{ irise::ClientState::Start };
@@ -44,6 +44,7 @@ private:
     int clientSocket{ -1 };
 
     std::vector<DeviceInfo> devices{};
+    std::vector<KernelInfo> kernels{};
 };
 
 } // namespace irise

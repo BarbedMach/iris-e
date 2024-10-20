@@ -34,7 +34,6 @@ struct DeviceInfo {
 struct KernelInfo {
     std::string name;
     std::string taskName;
-    std::vector<int> devices;
 
     auto toJSON() const -> json;
     static auto fromJSON(const json& json) -> KernelInfo;

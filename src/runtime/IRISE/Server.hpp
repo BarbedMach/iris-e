@@ -40,7 +40,8 @@ class Server {
         auto waitForHelloACK() -> void;
         auto waitForACK() -> void;
 
-        auto sendDeviceInfo(DeviceInfo deviceInfo) -> void;
+        auto sendDeviceInfo(DeviceInfo deviceInfo) -> Server&;
+        auto sendKernelInfo(KernelInfo kernelInfo) -> Server&;
     private:
         Server(const std::string& socketPath);
 
