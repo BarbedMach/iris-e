@@ -96,12 +96,24 @@ auto DeviceInfo::toJSON() const -> json {
 auto DeviceInfo::fromJSON(const json& json) -> DeviceInfo {
     DeviceInfo deviceInfo;
 
-    deviceInfo.devNo = json.at("devNo").get<int>();
-    deviceInfo.platformNo = json.at("platformNo").get<int>();
-    deviceInfo.vendor = json.at("vendor").get<std::string>();
-    deviceInfo.name = json.at("name").get<std::string>();
-    deviceInfo.type = json.at("type").get<int>();
-    deviceInfo.model = json.at("model").get<int>();
+    if (json.is_string()) {
+        auto parsedJson = nlohmann::json::parse(json.get<std::string>());
+
+        deviceInfo.devNo = parsedJson.at("devNo").get<int>();
+        deviceInfo.platformNo = parsedJson.at("platformNo").get<int>();
+        deviceInfo.vendor = parsedJson.at("vendor").get<std::string>();
+        deviceInfo.name = parsedJson.at("name").get<std::string>();
+        deviceInfo.type = parsedJson.at("type").get<int>();
+        deviceInfo.model = parsedJson.at("model").get<int>();
+    } else {
+        
+        deviceInfo.devNo = json.at("devNo").get<int>();
+        deviceInfo.platformNo = json.at("platformNo").get<int>();
+        deviceInfo.vendor = json.at("vendor").get<std::string>();
+        deviceInfo.name = json.at("name").get<std::string>();
+        deviceInfo.type = json.at("type").get<int>();
+        deviceInfo.model = json.at("model").get<int>();
+    }
 
     return deviceInfo;
 }
@@ -118,10 +130,19 @@ auto KernelInfo::toJSON() const -> json {
 
 auto KernelInfo::fromJSON(const json& json) -> KernelInfo {
     KernelInfo kernelInfo;
-    
-    kernelInfo.name = json.at("name").get<std::string>();
-    kernelInfo.taskName = json.at("taskName").get<std::string>();
-    kernelInfo.devices = json.at("devices").get<std::vector<int>>();
+
+    if (json.is_string()) {
+        auto parsedJson = nlohmann::json::parse(json.get<std::string>());
+
+        kernelInfo.name = parsedJson.at("name").get<std::string>();
+        kernelInfo.taskName = parsedJson.at("taskName").get<std::string>();
+        kernelInfo.devices = parsedJson.at("devices").get<std::vector<int>>();
+    } else {
+
+        kernelInfo.name = json.at("name").get<std::string>();
+        kernelInfo.taskName = json.at("taskName").get<std::string>();
+        kernelInfo.devices = json.at("devices").get<std::vector<int>>();
+    }
 
     return kernelInfo;
 }
