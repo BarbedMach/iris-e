@@ -61,7 +61,7 @@ auto Server::handleClient() -> void {
                     switch (message.getMessageType()) {
 
                         case MessageType::ACK:
-                            helloAcknowledged = true;
+                            acknowledged = true;
                             messageAcknowledged.notify_one();
                             break;
 
@@ -181,7 +181,7 @@ auto Server::waitForHelloACK() -> void {
 auto Server::waitForACK() -> void {
     std::unique_lock<std::mutex> lock{ conditionMutex };
     messageAcknowledged.wait(lock, [this] {return acknowledged;});
-    //acknowledged = false;
+    acknowledged = false;
 }
 
 auto Server::sendDeviceInfo(DeviceInfo deviceInfo) -> void {
