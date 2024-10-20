@@ -34,7 +34,13 @@ class Server {
 
         ~Server();
 
-        auto waitForHello() -> void;
+        auto getState() -> ServerState;
+        auto setState(ServerState nextState) -> void;
+
+        auto waitForHelloACK() -> void;
+        auto waitForACK() -> void;
+
+        auto sendDeviceInfo(DeviceInfo deviceInfo) -> void;
     private:
         Server(const std::string& socketPath);
 
@@ -53,11 +59,14 @@ class Server {
         std::mutex conditionMutex;
         std::condition_variable helloReceivedCondition;
 
-        auto readFromClient(int clientSocket) -> std::string;
-        auto writeToClient(int clientSocket, const std::string& message) -> void;
+        bool acknowledged{ false };
+        std::condition_variable messageAcknowledged;
+
+        auto readFromClient() -> std::string;
+        auto writeToClient(const std::string& message) -> void;
 
         auto loop() -> void;
-        auto handleClient(int clientSocket) -> void;
+        auto handleClient() -> void;
 };
 
 } // namespace irise

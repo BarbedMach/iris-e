@@ -137,7 +137,7 @@ Platform::~Platform() {
 int Platform::Init(int* argc, char*** argv, int sync) {
 
   irise::Server::instance("/tmp/irise_socket");
-  irise::Server::instance().waitForHello();
+  irise::Server::instance().waitForHelloACK();
 
   pthread_mutex_lock(&mutex_);
   if (init_) {
@@ -409,8 +409,20 @@ int Platform::InitCUDA() {
 
     irise::Devices::instance().registerDevice(devs_[ndevs_]);
 
+    if (irise::Server::instance().getState() == irise::ServerState::Ready) {
+      irise::Server::instance().setState(irise::ServerState::DeviceInfo);
+    }
+
+    auto* thisDevice = devs_[ndevs_];
+
+    auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+    irise::Server::instance().sendDeviceInfo(devInfo);
+
     ndevs_++;
     mdevs++;
+
+    irise::Server::instance().waitForACK();
+
 #ifdef ENABLE_SINGLE_DEVICE_PER_CU
     break;
 #endif
@@ -474,8 +486,20 @@ int Platform::InitHIP() {
 
     irise::Devices::instance().registerDevice(devs_[ndevs_]);
 
+    if (irise::Server::instance().getState() == irise::ServerState::Ready) {
+      irise::Server::instance().setState(irise::ServerState::DeviceInfo);
+    }
+
+    auto* thisDevice = devs_[ndevs_];
+
+    auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+    irise::Server::instance().sendDeviceInfo(devInfo);
+
     ndevs_++;
     mdevs++;
+
+    irise::Server::instance().waitForACK();
+
 #ifdef ENABLE_SINGLE_DEVICE_PER_CU
     break;
 #endif
@@ -549,7 +573,19 @@ int Platform::InitLevelZero() {
 
     irise::Devices::instance().registerDevice(devs_[ndevs_]);
 
-    ndevs_++; mdevs++;
+    if (irise::Server::instance().getState() == irise::ServerState::Ready) {
+      irise::Server::instance().setState(irise::ServerState::DeviceInfo);
+    }
+
+    auto* thisDevice = devs_[ndevs_];
+
+    auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+    irise::Server::instance().sendDeviceInfo(devInfo);
+
+    ndevs_++;
+    mdevs++;
+
+    irise::Server::instance().waitForACK();
   }
   if (ndevs) {
     strcpy(platform_names_[nplatforms_], "LevelZero");
@@ -577,7 +613,15 @@ int Platform::InitOpenMP() {
 
   irise::Devices::instance().registerDevice(devs_[ndevs_]);
 
+  if (irise::Server::instance().getState() == irise::ServerState::Ready) {
+    irise::Server::instance().setState(irise::ServerState::DeviceInfo);
+  }
+  auto* thisDevice = devs_[ndevs_];
+  auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+  irise::Server::instance().sendDeviceInfo(devInfo);
   ndevs_++;
+  irise::Server::instance().waitForACK();
+
   strcpy(platform_names_[nplatforms_], "OpenMP");
   first_dev_of_type_[nplatforms_] = devs_[ndevs_-1];
   nplatforms_++;
@@ -603,7 +647,15 @@ int Platform::InitHexagon() {
 
   irise::Devices::instance().registerDevice(devs_[ndevs_]);
 
+  if (irise::Server::instance().getState() == irise::ServerState::Ready) {
+    irise::Server::instance().setState(irise::ServerState::DeviceInfo);
+  }
+  auto* thisDevice = devs_[ndevs_];
+  auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+  irise::Server::instance().sendDeviceInfo(devInfo);
   ndevs_++;
+  irise::Server::instance().waitForACK();
+
   strcpy(platform_names_[nplatforms_], "Hexagon");
   first_dev_of_type_[nplatforms_] = devs_[ndevs_-1];
   nplatforms_++;
@@ -674,6 +726,17 @@ int Platform::InitOpenCL() {
       arch_available_ |= devs_[ndevs_]->type();
 
       irise::Devices::instance().registerDevice(devs_[ndevs_]);
+
+      if (irise::Server::instance().getState() == irise::ServerState::Ready) {
+        irise::Server::instance().setState(irise::ServerState::DeviceInfo);
+      }
+
+      auto* thisDevice = devs_[ndevs_];
+
+      auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+      irise::Server::instance().sendDeviceInfo(devInfo);
+
+      irise::Server::instance().waitForACK();
 
       ndevs_++;
       mdevs++;

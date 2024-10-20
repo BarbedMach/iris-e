@@ -2,7 +2,7 @@
 
 namespace irise {
 
-auto Server::readFromClient(int clientSocket) -> std::string {
+auto Server::readFromClient() -> std::string {
     std::string incomingMessage{};
     char buffer[256];
 
@@ -17,39 +17,65 @@ auto Server::readFromClient(int clientSocket) -> std::string {
     return incomingMessage;
 }
 
-auto Server::writeToClient(int clientSocket, const std::string& message) -> void {
+auto Server::writeToClient(const std::string& message) -> void {
     ssize_t bytesWritten = write(clientSocket, message.c_str(), message.size());
     if (bytesWritten < 0 && (errno != EAGAIN && errno != EWOULDBLOCK)) {
         std::cerr << "Server: Error writing to client socket." << std::endl;
     }
 }
 
-auto Server::handleClient(int clientSocket) -> void {
+auto Server::handleClient() -> void {
     while(true) {
-        auto clientMessage = readFromClient(clientSocket);
+        auto clientMessage = readFromClient();
         if (clientMessage.empty()) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             break;
         }
 
         auto message = Message::fromJSONString(clientMessage);
-        auto messageType = message.getMessageType();
 
         {
             auto lock{ std::lock_guard<std::mutex>{ conditionMutex } };
 
-            switch(messageType) {
-                using enum MessageType;
-                case HELLO:
-                    writeToClient(clientSocket, Message{HELLO_ACK});
-                    helloAcknowledged = true;
-                    helloReceivedCondition.notify_one();
+            switch(state) {
+                case ServerState::Connected:
+                    switch (message.getMessageType()) {
+
+                        case MessageType::HELLO:
+                            writeToClient(Message{MessageType::HELLO_ACK});
+                            helloAcknowledged = true;
+                            helloReceivedCondition.notify_one();
+                            state = ServerState::Ready;
+                            break;
+
+                        default:
+                            writeToClient(Message{MessageType::UNKNOWN});
+                            break;
+                    }
                     break;
+                
+                case ServerState::Ready:
+                    break;
+                
+                case ServerState::DeviceInfo:
+                    switch (message.getMessageType()) {
+
+                        case MessageType::ACK:
+                            acknowledged = false;
+                            break;
+
+                        default:
+                            break;
+                    }
+                    break;
+                
                 default:
-                    writeToClient(clientSocket, Message{UNKNOWN});
                     break;
+                
+
             }
         }
-        }
+    }
 }
 
 auto Server::loop() -> void {
@@ -60,7 +86,7 @@ auto Server::loop() -> void {
         }
         lock.unlock();
 
-        handleClient(clientSocket);
+        handleClient();
     }
 }
 
@@ -138,9 +164,27 @@ Server::~Server() {
     unlink(socketPath.c_str());
 }
 
-auto Server::waitForHello() -> void {
+auto Server::setState(ServerState nextState) -> void {
+    state = nextState;
+}
+
+auto Server::getState() -> ServerState {
+    return state;
+}
+
+auto Server::waitForHelloACK() -> void {
     std::unique_lock<std::mutex> lock{conditionMutex};
     helloReceivedCondition.wait(lock, [this] {return helloAcknowledged;});
+}
+
+auto Server::waitForACK() -> void {
+    std::unique_lock<std::mutex> lock{ conditionMutex };
+    messageAcknowledged.wait(lock, [this] {return acknowledged;});
+}
+
+auto Server::sendDeviceInfo(DeviceInfo deviceInfo) -> void {
+    std::cout << "Device Info being sent!" << std::endl;
+    writeToClient(Message{ deviceInfo });
 }
 
 } // namepsace irise
