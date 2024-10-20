@@ -1,8 +1,14 @@
 #include <iostream>
+#include <string>
 #include "Client.hpp"
 
 auto main() -> int {
-    auto client{irise::Client{"/tmp/irise_socket"}};
+    std::cout << "Enter socket path: ";
+    std::string socketPath;
+
+    std::cin >> socketPath;
+
+    auto client{irise::Client{socketPath}};
 
     client.sendMessage(irise::Message{irise::MessageType::HELLO});
 

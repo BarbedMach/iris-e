@@ -34,16 +34,26 @@ auto Server::handleClient(int clientSocket) -> void {
     auto clientMessageAsJSON = Message::fromJSON(clientMessage);
     auto messageType = clientMessageAsJSON.getMessageType();
 
-    switch(messageType) {
+    {
+        auto lock{ std::lock_guard<std::mutex>{ conditionMutex } };
+        
+        switch(messageType) {
         using enum MessageType;
-        case HELLO: return writeToClient(clientSocket, Message{HELLO_ACK});
+        case HELLO:
+            writeToClient(clientSocket, Message{HELLO_ACK});
+            
+            helloAcknowledged = true;
+            helloReceivedCondition.notify_one();
+            
+        default: return writeToClient(clientSocket, Message{UNKNOWN});
+    }
 
     }
 }
 
 auto Server::loop() -> void {
     while(true) {
-        auto lock{ std::unique_lock<std::mutex>{ mutex } };
+        auto lock{ std::unique_lock<std::mutex>{ mutexRunning } };
         if (!running) {
             break;
         }
@@ -90,7 +100,7 @@ Server::Server(const std::string& socketPath) : serverSocket(socket(AF_UNIX, SOC
     std::cout << "Server listening on: " << socketPath << std::endl;
 
     {
-        auto lock{ std::lock_guard<std::mutex>{ mutex } };
+        auto lock{ std::lock_guard<std::mutex>{ mutexRunning } };
         running = true;
     }
 
@@ -105,6 +115,11 @@ Server::~Server() {
         serverThread.join();
     }
     unlink(socketPath.c_str());
+}
+
+auto Server::waitForHello() -> void {
+    std::unique_lock<std::mutex> lock{conditionMutex};
+    helloReceivedCondition.wait(lock, [this] {return helloAcknowledged;});
 }
 
 } // namepsace irise

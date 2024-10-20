@@ -8,6 +8,7 @@
 #include <thread>
 #include <mutex>
 #include <string>
+#include <condition_variable>
 #include "Messages.hpp"
 
 namespace irise {
@@ -22,6 +23,7 @@ class Server {
 
         ~Server();
 
+        auto waitForHello() -> void;
     private:
         Server(const std::string& socketPath);
 
@@ -29,9 +31,13 @@ class Server {
         std::string socketPath;
 
         bool running{ false };
+        std::mutex mutexRunning;
 
-        std::mutex mutex;
         std::thread serverThread;
+
+        bool helloAcknowledged{ false };
+        std::mutex conditionMutex;
+        std::condition_variable helloReceivedCondition;
 
         auto readFromClient(int clientSocket) -> std::string;
         auto writeToClient(int clientSocket, const std::string& message) -> void;
