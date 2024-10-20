@@ -70,6 +70,7 @@ auto Server::loop() -> void {
         auto clientSocket = accept(serverSocket, nullptr, nullptr);
         if (clientSocket < 0) {
             std::cerr << "Server: accept failed. Retrying in 2 seconds..." << std::endl;
+            std::cout << "Client socket code: " << clientSocket << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(2));
             continue;
         }
