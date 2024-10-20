@@ -126,8 +126,6 @@ Server::Server(const std::string& socketPath) : serverSocket(socket(AF_UNIX, SOC
         int flags = fcntl(clientSocket, F_GETFL, 0);
         fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
     }
-
-    serverThread = std::thread(&Server::loop, this);
 }
 
 Server::~Server() {
@@ -143,11 +141,16 @@ Server::~Server() {
     unlink(socketPath.c_str());
 }
 
+auto Server::start() -> void {
+    serverThread = std::thread(&Server::loop, this);
+}
+
 auto Server::waitForHello() -> void {
     std::cout << "Wait for hello entered" << std::endl;
     std::unique_lock<std::mutex> lock{conditionMutex};
     std::cout << "Wait for hello lock passed." << std::endl;
     helloReceivedCondition.wait(lock, [this] {return helloAcknowledged;});
+    std::cout << "condvar hello received condition passed." << std::endl;
 }
 
 } // namepsace irise

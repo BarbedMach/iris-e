@@ -25,6 +25,7 @@ class Server {
 
         ~Server();
 
+        auto start() -> void;
         auto waitForHello() -> void;
     private:
         Server(const std::string& socketPath);
