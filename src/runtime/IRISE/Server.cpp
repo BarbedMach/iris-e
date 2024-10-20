@@ -122,6 +122,7 @@ Server::Server(const std::string& socketPath) : serverSocket(socket(AF_UNIX, SOC
             continue;
         }
 
+        foundClient = true;
         int flags = fcntl(clientSocket, F_GETFL, 0);
         fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
     }
