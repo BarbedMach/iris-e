@@ -60,14 +60,6 @@ auto main() -> int {
                 std::cerr << "No response received. The server may be down." << std::endl;
             }
 
-            // Based on state, transition to other tasks (e.g., sending device info)
-            if (helloAcknowledged && client.getState() == irise::ClientState::Ready) {
-                // Client is now ready to send other messages, such as DeviceInfo
-                irise::DeviceInfo deviceInfo{/* populate with actual data */};
-                client.sendDeviceInfo(deviceInfo);
-                client.setState(irise::ClientState::DeviceInfo);
-            }
-
         } catch(const std::exception& e) {
             std::cerr << "Error during communication. Details: " << e.what() << std::endl;
         }
