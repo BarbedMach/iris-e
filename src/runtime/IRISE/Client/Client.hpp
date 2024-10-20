@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdexcept>
 #include <iostream>
+#include <fcntl.h>
 #include "../Messages.hpp"
 
 namespace irise {
