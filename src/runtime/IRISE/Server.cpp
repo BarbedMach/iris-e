@@ -32,8 +32,10 @@ auto Server::handleClient(int clientSocket) -> void {
     auto clientMessage = readFromClient(clientSocket);
     std::cout << "Server received message: " << clientMessage << std::endl; // Debug output
 
-    auto clientMessageAsJSON = Message::fromJSONString(clientMessage);
-    auto messageType = clientMessageAsJSON.getMessageType();
+    auto message = Message::fromJSONString(clientMessage);
+    auto messageType = message.getMessageType();
+
+    std::cout << "Message type is : " << Message::toString(messageType) << std::endl;
 
     {
         auto lock{ std::lock_guard<std::mutex>{ conditionMutex } };
