@@ -40,7 +40,9 @@ auto Server::handleClient(int clientSocket) -> void {
 
         switch(messageType) {
             using enum MessageType;
+            std::cout << "Message type switch entered." << std::endl;
             case HELLO:
+                std::cout << "HELLO case reached!" << std::endl;
                 writeToClient(clientSocket, Message{HELLO_ACK});
                 std::cout << "Server sent HELLO_ACK" << std::endl; // Debug output
 
