@@ -36,6 +36,7 @@ auto Server::handleClient(int clientSocket) -> void {
     {
         std::cout << "Entered the lock guard for conditionMutex!" << std::endl;
         auto lock{ std::lock_guard<std::mutex>{ conditionMutex } };
+        std::cout << "Lock guard for conditionMutex passed" << std::endl;
 
         switch(messageType) {
             using enum MessageType;
@@ -130,7 +131,9 @@ Server::~Server() {
 }
 
 auto Server::waitForHello() -> void {
+    std::cout << "Wait for hello entered" << std::endl;
     std::unique_lock<std::mutex> lock{conditionMutex};
+    std::cout << "Wait for hello lock passed." << std::endl;
     helloReceivedCondition.wait(lock, [this] {return helloAcknowledged;});
 }
 
