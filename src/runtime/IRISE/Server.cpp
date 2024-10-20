@@ -2,7 +2,7 @@
 
 namespace irise {
 
-auto Server::readFromClient() -> std::string {
+auto Server::readFromClient(int clientSocket) -> std::string {
     std::string incomingMessage{};
     char buffer[256];
 
@@ -17,7 +17,7 @@ auto Server::readFromClient() -> std::string {
     return incomingMessage;
 }
 
-auto Server::writeToClient(const std::string& message) -> void {
+auto Server::writeToClient(int clientSocket, const std::string& message) -> void {
     std::cout << "To client [" << clientSocket << "] : '" << message << "'" << std::endl;
     ssize_t bytesWritten = write(clientSocket, message.c_str(), message.size());
     std::cout << "Bytes Written : " << bytesWritten << std::endl;
@@ -26,8 +26,8 @@ auto Server::writeToClient(const std::string& message) -> void {
     }
 }
 
-auto Server::handleClient() -> void {
-    auto clientMessage = readFromClient();
+auto Server::handleClient(int clientSocket) -> void {
+    auto clientMessage = readFromClient(clientSocket);
     std::cout << "Server received message: " << clientMessage << std::endl; // Debug output
 
     auto message = Message::fromJSONString(clientMessage);
@@ -45,14 +45,14 @@ auto Server::handleClient() -> void {
             std::cout << "Message type switch entered." << std::endl;
             case HELLO:
                 std::cout << "HELLO case reached!" << std::endl;
-                writeToClient(Message{HELLO_ACK});
+                writeToClient(clientSocket, Message{HELLO_ACK});
                 std::cout << "Server sent HELLO_ACK" << std::endl; // Debug output
 
                 helloAcknowledged = true;
                 helloReceivedCondition.notify_one();
                 break; // Use break instead of default
             default:
-                writeToClient(Message{UNKNOWN});
+                writeToClient(clientSocket, Message{UNKNOWN});
                 std::cout << "Server sent UNKNOWN response" << std::endl; // Debug output
                 break;
         }
@@ -67,7 +67,18 @@ auto Server::loop() -> void {
         }
         lock.unlock();
 
-        handleClient();
+        auto clientSocket = accept(serverSocket, nullptr, nullptr);
+        if (clientSocket < 0) {
+            std::cerr << "Server: accept failed. Retrying in 2 seconds..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+            continue;
+        }
+
+        int flags = fcntl(clientSocket, F_GETFL, 0);
+        fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
+
+        handleClient(clientSocket);
+        close(clientSocket);
     }
 }
 
@@ -113,27 +124,12 @@ Server::Server(const std::string& socketPath) : serverSocket(socket(AF_UNIX, SOC
         running = true;
     }
 
-    auto foundClient{ false };
-    while (!foundClient) {
-        auto clientSocket = accept(serverSocket, nullptr, nullptr);
-        if (clientSocket < 0) {
-            std::cerr << "Server: accept failed. Retrying in 2 seconds..." << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(2));
-            continue;
-        }
-
-        foundClient = true;
-        int flags = fcntl(clientSocket, F_GETFL, 0);
-        fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
-    }
+    serverThread = std::thread(&Server::loop, this);
 }
 
 Server::~Server() {
     if (serverSocket >= 0) {
         close(serverSocket);
-    }
-    if (clientSocket >= 0) {
-        close(clientSocket);
     }
     if (serverThread.joinable()) {
         serverThread.join();
@@ -141,16 +137,11 @@ Server::~Server() {
     unlink(socketPath.c_str());
 }
 
-auto Server::start() -> void {
-    serverThread = std::thread(&Server::loop, this);
-}
-
 auto Server::waitForHello() -> void {
     std::cout << "Wait for hello entered" << std::endl;
     std::unique_lock<std::mutex> lock{conditionMutex};
     std::cout << "Wait for hello lock passed." << std::endl;
     helloReceivedCondition.wait(lock, [this] {return helloAcknowledged;});
-    std::cout << "condvar hello received condition passed." << std::endl;
 }
 
 } // namepsace irise
