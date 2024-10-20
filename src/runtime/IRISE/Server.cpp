@@ -34,6 +34,7 @@ auto Server::handleClient(int clientSocket) -> void {
     std::cout << "Message type is : " << Message::toString(messageType) << std::endl;
 
     {
+        std::cout << "Entered the lock guard for conditionMutex!" << std::endl;
         auto lock{ std::lock_guard<std::mutex>{ conditionMutex } };
 
         switch(messageType) {
@@ -63,7 +64,8 @@ auto Server::loop() -> void {
 
         auto clientSocket = accept(serverSocket, nullptr, nullptr);
         if (clientSocket < 0) {
-            std::cerr << "Server: accept failed." << std::endl;
+            std::cerr << "Server: accept failed. Retrying in 2 seconds..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(2));
             continue;
         }
 
