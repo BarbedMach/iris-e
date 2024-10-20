@@ -49,12 +49,15 @@ class Message {
         Message(const DeviceInfo& deviceInfo);
         Message(const KernelInfo& KernelInfo);
 
+        Message(MessageType messageType, std::string body);
+
         static auto toString(MessageType messageType) -> std::string;
         static auto toMessageType(const std::string& messageTypeString) -> MessageType;
 
         auto setMessageType(MessageType messageType) -> void;
         auto setBody(const std::string& bodyString) -> void;
 
+        static auto fromJSONString(const std::string& jsonString) -> Message;
         static auto fromJSON(const json& json) -> Message;
         auto toJSON() const -> json;
 
@@ -64,7 +67,7 @@ class Message {
         operator std::string() const;
 
     private:
-        MessageType messageType{};
+        MessageType header{};
         std::string body{};
 };
 

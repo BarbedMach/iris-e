@@ -31,14 +31,29 @@ auto Message::toMessageType(const std::string& messageTypeString) -> MessageType
     return UNKNOWN;
 }
 
-Message::Message(MessageType messageType) : messageType(messageType), body("") {}
+Message::Message(MessageType messageType) : header(messageType), body("") {}
 
 auto Message::setMessageType(MessageType messageType) -> void {
-    this->messageType = messageType;
+    header = messageType;
 }
 
 auto Message::setBody(const std::string& bodyString) -> void {
     body = bodyString;
+}
+
+Message::Message(MessageType messageType, std::string body) : header(std::move(messageType)), body(std::move(body)) {}
+
+auto Message::fromJSONString(const std::string& jsonString) -> Message {
+    auto json = nlohmann::json::parse(jsonString);
+    
+    if (!json.contains("header") || !json.contains("body")) {
+        throw std::runtime_error("Missing required fields in JSON.");
+    }
+
+    std::string header = json.at("header").get<std::string>();
+    std::string body = json.at("body").get<std::string>();
+
+    return Message{Message::toMessageType(header), body};
 }
 
 auto Message::fromJSON(const json& json) -> Message {
@@ -50,13 +65,13 @@ auto Message::fromJSON(const json& json) -> Message {
 
 auto Message::toJSON() const -> json {
     return json{
-        {"header", Message::toString(messageType)},
+        {"header", Message::toString(header)},
         {"body", body}
     };
 }
 
 auto Message::getMessageType() const -> MessageType {
-    return messageType;
+    return header;
 }
 
 auto Message::getBody() const -> std::string {
@@ -91,7 +106,7 @@ auto DeviceInfo::fromJSON(const json& json) -> DeviceInfo {
     return deviceInfo;
 }
 
-Message::Message(const DeviceInfo& deviceInfo) : messageType(MessageType::DEV_INFO), body(deviceInfo.toJSON().dump()) {}
+Message::Message(const DeviceInfo& deviceInfo) : header(MessageType::DEV_INFO), body(deviceInfo.toJSON().dump()) {}
 
 auto KernelInfo::toJSON() const -> json {
     return json{
@@ -111,6 +126,6 @@ auto KernelInfo::fromJSON(const json& json) -> KernelInfo {
     return kernelInfo;
 }
 
-Message::Message(const KernelInfo& KernelInfo) : messageType(MessageType::KERNEL_INFO), body(KernelInfo.toJSON().dump()) {}
+Message::Message(const KernelInfo& KernelInfo) : header(MessageType::KERNEL_INFO), body(KernelInfo.toJSON().dump()) {}
 
 } // namespace irise
