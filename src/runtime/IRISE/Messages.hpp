@@ -30,6 +30,14 @@ struct DeviceInfo {
 
     auto toJSON() const -> json;
     static auto fromJSON(const json& json) -> DeviceInfo;
+
+    bool operator==(const DeviceInfo& rhs) const {
+    return devNo == rhs.devNo;
+    }
+
+    bool operator<(const DeviceInfo& rhs) const {
+    return devNo < rhs.devNo;
+    }
 };
 
 struct KernelInfo {
@@ -38,6 +46,14 @@ struct KernelInfo {
 
     auto toJSON() const -> json;
     static auto fromJSON(const json& json) -> KernelInfo;
+
+    bool operator==(const KernelInfo& rhs) const {
+        return name == rhs.name && taskName == rhs.taskName;
+    }
+
+    bool operator<(const KernelInfo& rhs) const {
+        return std::tie(name, taskName) < std::tie(rhs.name, rhs.taskName);
+    }
 };
 
 struct KernelDeviceMapping {
@@ -46,6 +62,14 @@ struct KernelDeviceMapping {
 
     auto toJSON() const -> json;
     static auto fromJSON(const json& json) -> KernelDeviceMapping;
+
+    bool operator==(const KernelDeviceMapping& rhs) const {
+        return device == rhs.device && kernel == rhs.kernel;
+    }
+
+    bool operator<(const KernelDeviceMapping& rhs) const {
+        return std::tie(device, kernel) < std::tie(rhs.device, rhs.kernel);
+    }
 };
 
 struct PendingMapping {
@@ -53,7 +77,16 @@ struct PendingMapping {
 
     auto toJSON() const -> json;
     static auto fromJSON(const json& json) -> PendingMapping;
+
+    bool operator==(const PendingMapping& rhs) const {
+        return kernel == rhs.kernel;
+    }
+
+    bool operator<(const PendingMapping& rhs) const {
+        return kernel < rhs.kernel;
+    }
 };
+
 
 class Message {
     public:
