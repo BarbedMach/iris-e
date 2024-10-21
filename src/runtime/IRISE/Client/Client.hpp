@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <random>
+#include <ranges>
 #include "../Messages.hpp"
 
 namespace irise {
@@ -38,7 +39,7 @@ public:
 
     auto sendACK() -> void;
 
-    auto mapKernelsToDevicesRandomly() -> std::vector<KernelDeviceMapping>;
+    auto mapKernelToDeviceRandomly(const PendingMapping& pendingKernel) -> KernelDeviceMapping;
 
 private:
     ClientState state{ irise::ClientState::Start };

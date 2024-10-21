@@ -71,6 +71,7 @@ auto Server::handleClient() -> void {
                     break;
                 
                 case ServerState::KernelInfo:
+                case ServerState::MappingProfilingLoop:
                     switch (message.getMessageType()) {
                         case MessageType::ACK:
                             acknowledged = true;
@@ -79,7 +80,9 @@ auto Server::handleClient() -> void {
 
                         case MessageType::KERNEL_DEVICE_MAP:
                             state = ServerState::MappingProfilingLoop;
-                            // irise::Scheduler::instance().setMapping();
+                            irise::Scheduler::instance().setMapping(message);
+                            acknowledged = true;
+                            messageAcknowledged.notify_one();
                             break;
 
                         default:

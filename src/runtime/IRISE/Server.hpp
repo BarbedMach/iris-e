@@ -12,6 +12,7 @@
 #include <chrono>
 #include <condition_variable>
 #include "Messages.hpp"
+#include "Scheduler.hpp"
 
 namespace irise {
 

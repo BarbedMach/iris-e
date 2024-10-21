@@ -17,11 +17,13 @@ auto PolicyClient::GetDevices(Task* task, Device** devs, int* ndevs) -> void {
 
     if (auto it = std::ranges::find(kernels, taskName, &irise::KernelInfo::taskName); it != kernels.end()) {
         irise::Server::instance().sendMappingForKernelPending(irise::PendingMapping{ *it }).waitForACK();
+
+        auto& deviceToUse = irise::Scheduler::instance().getMapping()[*it];
+        devs[0] = devs[deviceToUse.devNo];
+        *ndevs = 1;
     } else {
         return policies->GetPolicy(iris_default, NULL)->GetDevices(task, devs, ndevs);
     }
-
-    
 }
 
 } // namespace iris::rt

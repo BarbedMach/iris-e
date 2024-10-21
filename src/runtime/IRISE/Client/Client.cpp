@@ -102,6 +102,21 @@ auto Client::handleMessage(const std::string& response) -> void {
             std::cout << "ACK sent back to server." << std::endl;
             break;
         }
+
+        case MessageType::PENDING_MAPPING: {
+            std::cout << "Received kernel pending mapping from server." << std::endl;
+
+            PendingMapping pendingMapping = PendingMapping::fromJSON(serverMessage.getBody());
+
+            setState(ClientState::MappingProfilingLoop);
+
+            auto mapping = mapKernelToDeviceRandomly(pendingMapping);
+            sendMessage(mapping.toJSON().dump());
+
+            std::cout << "Mapping: " << mapping.toJSON().dump() << std::endl;
+            break;
+        }
+
         case MessageType::ACK: {
             std::cout << "ACK received from server." << std::endl;
             break;
@@ -113,20 +128,14 @@ auto Client::handleMessage(const std::string& response) -> void {
     }
 }
 
-auto Client::mapKernelsToDevicesRandomly() -> std::vector<KernelDeviceMapping> {
-    std::vector<KernelDeviceMapping> mappings;
+auto Client::mapKernelToDeviceRandomly(const PendingMapping& pendingKernel) -> KernelDeviceMapping {
+    auto randomDevice{ std::random_device{} };
+    auto rng{ std::mt19937{ randomDevice() } };
+    std::uniform_int_distribution<std::mt19937::result_type> range{ 0, devices.size() };
 
-    auto kernelsCopy = kernels;
-    auto devicesCopy = devices;
+    return { KernelDeviceMapping{ devices[range(rng)], pendingKernel.kernel } };
 
-    std::shuffle(devicesCopy.begin(), devicesCopy.end(), std::mt19937{ std::random_device{}() });
 
-    for (auto i = 0; i < kernelsCopy.size(); ++i) {
-        auto mapping{ KernelDeviceMapping{ devicesCopy[i], kernelsCopy[i] } };
-        mappings.push_back(mapping);
-    }
-
-    return mappings;
 }
 
 } // namespace irise
