@@ -82,6 +82,7 @@ set(IRIS_RUNTIME_SOURCES
   PolicyProfile.cpp
   PolicyRandom.cpp
   PolicyRoundRobin.cpp
+  PolicyClient.cpp
   Polyhedral.cpp
   Pool.cpp
   PresentTable.cpp
