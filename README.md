@@ -1,5 +1,13 @@
-# IRIS
+# IRISE
+IRISE is the enhanced version of IRIS. It builds on top of IRIS and extends its functionality while maintaining compatibility. 
 
+Extended functionality:
+  - Client/Server Architecture: Allows inter-process communication via Unix Domain Sockets between IRISE_Client and IRISE::Server
+  - PolicyClient and Kernel-Device Mappings: Allows the client to schedule tasks on the fly to any available device based on the likes of client.
+  - CommandProfile: Allows the client to observe the profiling results of the executed tasks.  
+
+
+# IRIS
 IRIS is an intelligent runtime system for extremely heterogeneous architectures. IRIS discovers available functionality, manage multiple diverse programming
 systems (e.g., OpenMP, CUDA, HIP, Level Zero, OpenCL, Hexagon) simultaneously in the same application, represents data dependencies, orchestrates data movement proactively, and allows configurable work schedulers for diverse heterogeneous devices.
 
