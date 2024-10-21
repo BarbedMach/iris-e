@@ -29,7 +29,7 @@ Policies::Policies(Scheduler* scheduler) {
   policy_profile_     = new PolicyProfile(scheduler_, this);
   policy_random_      = new PolicyRandom(scheduler_);
   policy_roundrobin_  = new PolicyRoundRobin(scheduler_);
-  policy_client_      = new PolicyClient(scheduler_);
+  policy_client_      = new PolicyClient(scheduler_, this);
 }
 
 Policies::~Policies() {

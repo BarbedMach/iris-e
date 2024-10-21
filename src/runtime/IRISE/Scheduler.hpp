@@ -13,7 +13,13 @@ class Scheduler {
         static auto instance() -> Scheduler&;
 
         auto registerDevice(const DeviceInfo& deviceInfo) -> void;
-        auto registerKernel(const KernelInfo& kernelInfo) -> void;   
+        auto registerKernel(const KernelInfo& kernelInfo) -> void;
+
+        auto getDevices() -> std::vector<DeviceInfo>&;
+        auto getDevices() const ->  const std::vector<DeviceInfo>&;
+
+        auto getKernels() -> std::vector<KernelInfo>&;
+        auto getKernels() const -> const std::vector<KernelInfo>&;
 
     private:
         Scheduler() = default;

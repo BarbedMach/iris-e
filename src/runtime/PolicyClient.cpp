@@ -4,7 +4,7 @@
 
 namespace iris::rt {
 
-PolicyClient::PolicyClient(Scheduler* scheduler) {
+PolicyClient::PolicyClient(Scheduler* scheduler, Policies* policies) : policies(policies) {
     SetScheduler(scheduler);
 }
 
@@ -13,6 +13,13 @@ PolicyClient::~PolicyClient() {}
 auto PolicyClient::GetDevices(Task* task, Device** devs, int* ndevs) -> void {
     auto taskName{ std::string{task->name()} };
     
+    auto& kernels = irise::Scheduler::instance().getKernels();
+
+    if (auto it = std::ranges::find(kernels, taskName, &irise::KernelInfo::taskName); it != kernels.end()) {
+        irise::Server::instance().sendMappingForKernelPending(irise::PendingMapping{ *it }).waitForACK();
+    } else {
+        return policies->GetPolicy(iris_default, NULL)->GetDevices(task, devs, ndevs);
+    }
 }
 
 } // namespace iris::rt
