@@ -20,6 +20,8 @@ auto PolicyClient::GetDevices(Task* task, Device** devs, int* ndevs) -> void {
     } else {
         return policies->GetPolicy(iris_default, NULL)->GetDevices(task, devs, ndevs);
     }
+
+    
 }
 
 } // namespace iris::rt
