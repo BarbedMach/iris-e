@@ -5,6 +5,8 @@
 
 namespace iris::rt {
 
+class Scheduler;
+
 class PolicyClient : public Policy {
     public:
         PolicyClient(Scheduler* scheduler);
