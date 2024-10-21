@@ -12,6 +12,7 @@
 #include "PolicyProfile.h"
 #include "PolicyRandom.h"
 #include "PolicyRoundRobin.h"
+#include "PolicyClient.hpp"
 #include "Platform.h"
 
 namespace iris {
@@ -28,6 +29,7 @@ Policies::Policies(Scheduler* scheduler) {
   policy_profile_     = new PolicyProfile(scheduler_, this);
   policy_random_      = new PolicyRandom(scheduler_);
   policy_roundrobin_  = new PolicyRoundRobin(scheduler_);
+  policy_client_      = new PolicyClient(scheduler_);
 }
 
 Policies::~Policies() {
@@ -40,6 +42,7 @@ Policies::~Policies() {
   delete policy_profile_;
   delete policy_random_;
   delete policy_roundrobin_;
+  delete policy_client_;
   for (std::map<std::string, LoaderPolicy*>::iterator I = policy_customs_.begin(), E = policy_customs_.end(); I != E; ++I)
     delete I->second;
 }
@@ -62,6 +65,7 @@ Policy* Policies::GetPolicy(int brs_policy, char* opt) {
   if (brs_policy == iris_profile) return policy_profile_;
   if (brs_policy == iris_random)  return policy_random_;
   if (brs_policy == iris_pending) return policy_data_;//to get to this point with the pending policy it can only be for D2H tranfers (so just default to data policy to minimize memory movement)
+  if (brs_policy == iris_client)  return policy_client_;
   if (brs_policy == iris_custom) {
     if (policy_customs_.find(std::string(opt)) != policy_customs_.end()) {
       Policy* policy = policy_customs_[opt]->policy();
