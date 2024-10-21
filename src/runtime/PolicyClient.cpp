@@ -1,7 +1,6 @@
 #include "PolicyClient.hpp"
 
 #include "Task.h"
-#include "Scheduler.h"
 
 namespace iris::rt {
 

@@ -1,11 +1,10 @@
 #pragma once
 
 #include "Policy.h"
+#include "Scheduler.h"
 #include "IRISE/Scheduler.hpp"
 
 namespace iris::rt {
-
-class Scheduler;
 
 class PolicyClient : public Policy {
     public:
