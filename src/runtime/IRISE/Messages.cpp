@@ -13,6 +13,7 @@ auto Message::toString(MessageType messageType) -> std::string {
         case KERNEL_DEVICE_PROFILING_RES: return "KERNEL_DEVICE_PROFILING_RES";
         case DEV_INFO: return "DEV_INFO";
         case KERNEL_INFO: return "KERNEL_INFO";
+        case PENDING_MAPPING: return "PENDING_MAPPING";
         default: return "UNKNOWN";
     }
 }
@@ -27,6 +28,7 @@ auto Message::toMessageType(const std::string& messageTypeString) -> MessageType
     if (messageTypeString == "KERNEL_DEVICE_PROFILING_RES") { return KERNEL_DEVICE_PROFILING_RES; }
     if (messageTypeString == "DEV_INFO") { return DEV_INFO; }
     if (messageTypeString == "KERNEL_INFO") { return KERNEL_INFO; }
+    if (messageTypeString == "PENDING_MAPPING") { return PENDING_MAPPING; }
     
     return UNKNOWN;
 }
@@ -170,5 +172,28 @@ auto KernelDeviceMapping::fromJSON(const json& jsonInput) -> KernelDeviceMapping
 }
 
 Message::Message(const KernelDeviceMapping& mapping) : header(MessageType::KERNEL_DEVICE_MAP), body(mapping.toJSON().dump()) {}
+
+auto PendingMapping::toJSON() const -> json {
+    return json{
+        {"kernel", kernel.toJSON()}
+    };
+}
+
+auto PendingMapping::fromJSON(const json& jsonInput) -> PendingMapping {
+    PendingMapping pendingMapping;
+    json parsedJson;
+
+    if (jsonInput.is_string()) {
+        parsedJson = json::parse(jsonInput.get<std::string>());
+    } else {
+        parsedJson = jsonInput;
+    }
+
+    pendingMapping.kernel = KernelInfo::fromJSON(parsedJson.at("kernel"));
+
+    return pendingMapping;
+}
+
+Message::Message(const PendingMapping& pendingMapping) : header(MessageType::PENDING_MAPPING), body(pendingMapping.toJSON().dump()) {}
 
 } // namespace irise

@@ -15,6 +15,7 @@ enum class MessageType {
     HELLO_ACK,
     DEV_INFO,
     KERNEL_INFO,
+    PENDING_MAPPING,
     KERNEL_DEVICE_MAP,
     KERNEL_DEVICE_PROFILING_RES
 };
@@ -47,6 +48,12 @@ struct KernelDeviceMapping {
     static auto fromJSON(const json& json) -> KernelDeviceMapping;
 };
 
+struct PendingMapping {
+    KernelInfo kernel;
+
+    auto toJSON() const -> json;
+    static auto fromJSON(const json& json) -> PendingMapping;
+};
 
 class Message {
     public:
@@ -56,6 +63,7 @@ class Message {
         Message(const DeviceInfo& deviceInfo);
         Message(const KernelInfo& KernelInfo);
         Message(const KernelDeviceMapping& mapping);
+        Message(const PendingMapping& PendingMapping);
 
         Message(MessageType messageType, std::string body);
 

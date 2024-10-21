@@ -126,15 +126,7 @@ auto Client::mapKernelsToDevicesRandomly() -> std::vector<KernelDeviceMapping> {
         mappings.push_back(mapping);
     }
 
-    for (const auto& mapping : mappings) {
-        auto message = mapping.toJSON();
-
-        if (getState() == ClientState::KernelInfo) {
-            setState(ClientState::MappingProfilingLoop);
-        }
-
-        sendMessage(message.dump());
-    }
+    return mappings;
 }
 
 } // namespace irise

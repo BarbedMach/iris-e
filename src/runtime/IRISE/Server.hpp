@@ -42,6 +42,8 @@ class Server {
 
         auto sendDeviceInfo(DeviceInfo deviceInfo) -> Server&;
         auto sendKernelInfo(KernelInfo kernelInfo) -> Server&;
+
+        auto sendMappingForKernelPending(PendingMapping pendingMapping) -> Server&;
     private:
         Server(const std::string& socketPath);
 

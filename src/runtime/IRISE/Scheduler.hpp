@@ -9,7 +9,7 @@ class Scheduler {
 
         static auto instance() -> Scheduler&;
 
-            
+           
 
     private:
         Scheduler() = default;

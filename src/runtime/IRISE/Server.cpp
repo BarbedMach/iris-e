@@ -213,4 +213,10 @@ auto Server::sendKernelInfo(KernelInfo kernelInfo) -> Server& {
     return Server::instance();
 }
 
+auto Server::sendMappingForKernelPending(PendingMapping pendingMapping) -> Server& {
+    std::cout << "Kernel mapping request sent!" << std::endl;
+    writeToClient(Message{ pendingMapping });
+    return Server::instance();
+}
+
 } // namepsace irise
