@@ -18,6 +18,8 @@
 
 #include "IRISE/Devices.hpp"
 #include "IRISE/Server.hpp"
+#include "IRISE/Scheduler.hpp"
+
 using namespace std;
 
 namespace iris {

@@ -7,4 +7,12 @@ auto Scheduler::instance() -> Scheduler& {
     return instance;
 }
 
+auto Scheduler::registerDevice(const DeviceInfo& deviceInfo) -> void {
+    devices.push_back(deviceInfo);
+}
+
+auto Scheduler::registerKernel(const KernelInfo& kernelInfo) -> void {
+    kernels.push_back(kernelInfo);
+}
+
 } // namespace irise

@@ -2,7 +2,9 @@
 
 #include "Policy.h"
 #include "Scheduler.h"
+#include "IRISE/Server.hpp"
 #include "IRISE/Scheduler.hpp"
+#include <string>
 
 namespace iris::rt {
 

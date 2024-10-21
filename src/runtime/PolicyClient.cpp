@@ -11,6 +11,7 @@ PolicyClient::PolicyClient(Scheduler* scheduler) {
 PolicyClient::~PolicyClient() {}
 
 auto PolicyClient::GetDevices(Task* task, Device** devs, int* ndevs) -> void {
+    auto taskName{ std::string{task->name()} };
     
 }
 

@@ -416,6 +416,8 @@ int Platform::InitCUDA() {
     auto* thisDevice = devs_[ndevs_];
 
     auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+    
+    irise::Scheduler::instance().registerDevice(devInfo);
     irise::Server::instance().sendDeviceInfo(devInfo);
 
     ndevs_++;
@@ -493,6 +495,8 @@ int Platform::InitHIP() {
     auto* thisDevice = devs_[ndevs_];
 
     auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+
+    irise::Scheduler::instance().registerDevice(devInfo);
     irise::Server::instance().sendDeviceInfo(devInfo);
 
     ndevs_++;
@@ -580,6 +584,8 @@ int Platform::InitLevelZero() {
     auto* thisDevice = devs_[ndevs_];
 
     auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+    
+    irise::Scheduler::instance().registerDevice(devInfo);
     irise::Server::instance().sendDeviceInfo(devInfo);
 
     ndevs_++;
@@ -618,6 +624,8 @@ int Platform::InitOpenMP() {
   }
   auto* thisDevice = devs_[ndevs_];
   auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+
+  irise::Scheduler::instance().registerDevice(devInfo);
   irise::Server::instance().sendDeviceInfo(devInfo);
   ndevs_++;
   irise::Server::instance().waitForACK();
@@ -652,6 +660,8 @@ int Platform::InitHexagon() {
   }
   auto* thisDevice = devs_[ndevs_];
   auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+
+  irise::Scheduler::instance().registerDevice(devInfo);
   irise::Server::instance().sendDeviceInfo(devInfo);
   ndevs_++;
   irise::Server::instance().waitForACK();
@@ -734,6 +744,8 @@ int Platform::InitOpenCL() {
       auto* thisDevice = devs_[ndevs_];
 
       auto devInfo{ irise::DeviceInfo{thisDevice->devno(), thisDevice->platform(), thisDevice->vendor(), thisDevice->name(), thisDevice->type(), thisDevice->model()} };
+
+      irise::Scheduler::instance().registerDevice(devInfo);
       irise::Server::instance().sendDeviceInfo(devInfo);
 
       irise::Server::instance().waitForACK();
@@ -1042,6 +1054,8 @@ int Platform::TaskKernel(iris_task brs_task, const char* name, int dim, size_t* 
   }
 
   irise::KernelInfo kernelInfo{ kernel->name(), task->name() };
+
+  irise::Scheduler::instance().registerKernel(kernelInfo);
   irise::Server::instance().sendKernelInfo(kernelInfo).waitForACK();
 
   return IRIS_SUCCESS;
