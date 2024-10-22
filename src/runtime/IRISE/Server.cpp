@@ -193,13 +193,11 @@ auto Server::stop() -> void {
 
     unlink(socketPath.c_str());
 
-    std::cout << "Server stopped successfully." << std::endl;
+    std::cout << "Server stopped!" << std::endl;
 }
 
 
-Server::~Server() {
-    stop();
-}
+Server::~Server() {}
 
 auto Server::setState(ServerState nextState) -> void {
     state = nextState;
