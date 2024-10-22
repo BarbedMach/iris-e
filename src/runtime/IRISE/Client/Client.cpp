@@ -36,7 +36,7 @@ auto Client::sendMessage(const std::string& message) -> void {
 
 auto Client::receiveMessage() -> std::string {
     std::string incomingMessage{};
-    char buffer[256];
+    char buffer[2048];
 
     ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer) - 1);
     if (bytesRead < 0) {
