@@ -111,7 +111,7 @@ auto Client::handleMessage(const std::string& response) -> void {
             setState(ClientState::MappingProfilingLoop);
 
             auto mapping = mapKernelToDeviceRandomly(pendingMapping);
-            sendMessage(mapping.toJSON().dump());
+            sendMessage(Message{ mapping });
 
             std::cout << "Mapping: " << mapping.toJSON().dump() << std::endl;
             break;
