@@ -1284,6 +1284,7 @@ int Platform::TaskSubmit(Task *task, int brs_policy, const char* opt, int sync) 
     irise::Server::instance().setState(irise::ServerState::KernelInfo);
   }
 
+  std::cout << "Kernel name: " << task->cmd_kernel()->name() << " Task name: " << task->name() << std::endl;
   irise::KernelInfo kernelInfo{ task->cmd_kernel()->name(), task->name() };
 
   irise::Scheduler::instance().registerKernel(kernelInfo);
