@@ -24,6 +24,7 @@ auto main() -> int {
     while (true) {
 
         if (noResponseReceivedCounter > 5) {
+            std::cout << "The server seems to be down. Closing client." << std::endl;
             break;
         } 
         try {
@@ -46,6 +47,6 @@ auto main() -> int {
             std::cerr << "Error during communication. Details: " << e.what() << std::endl;
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100 * (noResponseReceivedCounter + 1)));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100 * (2 * noResponseReceivedCounter + 1)));
     }
 }
