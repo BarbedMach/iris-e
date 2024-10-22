@@ -1266,6 +1266,17 @@ int Platform::NumErrors(){
 
 int Platform::TaskSubmit(iris_task brs_task, int brs_policy, const char* opt, int sync) {
   Task *task = get_task_object(brs_task);
+
+  if (irise::Server::instance().getState() != irise::ServerState::KernelInfo) {
+    irise::Server::instance().setState(irise::ServerState::KernelInfo);
+  }
+
+  std::cout << "Kernel name: " << task->cmd_kernel()->name() << " Task name: " << task->name() << std::endl;
+  irise::KernelInfo kernelInfo{ task->cmd_kernel()->name(), task->name() };
+
+  irise::Scheduler::instance().registerKernel(kernelInfo);
+  irise::Server::instance().sendKernelInfo(kernelInfo).waitForACK();
+
   assert(task != NULL);
   task->Submit(brs_policy, opt, sync);
   _trace(" successfully submitted task:%lu:%s", task->uid(), task->name());
