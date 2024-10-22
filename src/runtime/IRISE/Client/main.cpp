@@ -5,6 +5,9 @@
 #include "Client.hpp"
 
 auto main() -> int {
+
+    int noResponseReceivedCounter = 0;
+
     std::cout << "Enter socket path: ";
     std::string socketPath;
     std::cin >> socketPath;
@@ -19,6 +22,10 @@ auto main() -> int {
     }
 
     while (true) {
+
+        if (noResponseReceivedCounter > 10) {
+            break;
+        } 
         try {
             if (client.getState() == irise::ClientState::Start || client.getState() == irise::ClientState::Connected) {
                 client.sendMessage(irise::Message{irise::MessageType::HELLO});
@@ -28,15 +35,17 @@ auto main() -> int {
             std::string response = client.receiveMessage();
             if (!response.empty()) {
                 std::cout << "Response from server: " << response << std::endl;
+                noResponseReceivedCounter = 0;
                 client.handleMessage(response);
             } else {
                 std::cerr << "No response received. The server may be down." << std::endl;
+                noResponseReceivedCounter++;
             }
 
         } catch(const std::exception& e) {
             std::cerr << "Error during communication. Details: " << e.what() << std::endl;
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100 * (noResponseReceivedCounter + 1)));
     }
 }
