@@ -23,12 +23,14 @@ auto PolicyClient::GetDevices(Task* task, Device** devs, int* ndevs) -> void {
         std::cout << "Device to use: " << deviceToUse.devNo << std::endl;
 
         if (!IsKernelSupported(task, devs_[deviceToUse.devNo])) {
+            std::cout << "Kernel found but device is not supported!" << std::endl;
             return policies->GetPolicy(iris_default, NULL)->GetDevices(task, devs, ndevs);
         }
 
         devs[0] = devs_[deviceToUse.devNo];
         *ndevs = 1;
     } else {
+        std::cout << "Kernel not found!" << std::endl;
         return policies->GetPolicy(iris_default, NULL)->GetDevices(task, devs, ndevs);
     }
 }
