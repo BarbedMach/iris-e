@@ -45,7 +45,6 @@ auto Client::receiveMessage() -> std::string {
         }
         throw std::runtime_error("Client: Error reading from client socket.");
     } else if (bytesRead == 0) {
-        std::cerr << "Client: Connection closed by server." << std::endl;
         return incomingMessage;
     }
 

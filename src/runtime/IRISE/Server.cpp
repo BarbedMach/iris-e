@@ -172,17 +172,33 @@ Server::Server(const std::string& socketPath) : serverSocket(socket(AF_UNIX, SOC
     serverThread = std::thread(&Server::loop, this);
 }
 
-Server::~Server() {
-    if (serverSocket >= 0) {
-        close(serverSocket);
+auto Server::stop() -> void {
+    {
+        auto lock{ std::lock_guard<std::mutex>{ mutexRunning } };
+        running = false;
     }
+
     if (clientSocket >= 0) {
         close(clientSocket);
+        clientSocket = -1;
     }
+    if (serverSocket >= 0) {
+        close(serverSocket);
+        serverSocket = -1;
+    }
+
     if (serverThread.joinable()) {
         serverThread.join();
     }
+
     unlink(socketPath.c_str());
+
+    std::cout << "Server stopped successfully." << std::endl;
+}
+
+
+Server::~Server() {
+    stop();
 }
 
 auto Server::setState(ServerState nextState) -> void {

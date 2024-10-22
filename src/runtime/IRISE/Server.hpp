@@ -35,6 +35,8 @@ class Server {
 
         ~Server();
 
+        auto stop() -> void;
+
         auto getState() -> ServerState;
         auto setState(ServerState nextState) -> void;
 
