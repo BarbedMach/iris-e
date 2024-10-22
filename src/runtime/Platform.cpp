@@ -1049,15 +1049,6 @@ int Platform::TaskKernel(iris_task brs_task, const char* name, int dim, size_t* 
   Command* cmd = Command::CreateKernel(task, kernel, dim, off, gws, lws, nparams, params, params_off, params_info, memranges);
   task->AddCommand(cmd);
 
-  if (irise::Server::instance().getState() != irise::ServerState::KernelInfo) {
-    irise::Server::instance().setState(irise::ServerState::KernelInfo);
-  }
-
-  irise::KernelInfo kernelInfo{ kernel->name(), task->name() };
-
-  irise::Scheduler::instance().registerKernel(kernelInfo);
-  irise::Server::instance().sendKernelInfo(kernelInfo).waitForACK();
-
   return IRIS_SUCCESS;
 }
 
@@ -1288,6 +1279,16 @@ int Platform::TaskSubmit(iris_task brs_task, int brs_policy, const char* opt, in
 }
 
 int Platform::TaskSubmit(Task *task, int brs_policy, const char* opt, int sync) {
+
+  if (irise::Server::instance().getState() != irise::ServerState::KernelInfo) {
+    irise::Server::instance().setState(irise::ServerState::KernelInfo);
+  }
+
+  irise::KernelInfo kernelInfo{ task->cmd_kernel()->name(), task->name() };
+
+  irise::Scheduler::instance().registerKernel(kernelInfo);
+  irise::Server::instance().sendKernelInfo(kernelInfo).waitForACK();
+
   task->Submit(brs_policy, opt, sync);
   _trace(" successfully submitted task:%lu:%s", task->uid(), task->name());
   if (recording_) json_->RecordTask(task);
