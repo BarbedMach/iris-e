@@ -23,7 +23,7 @@ auto main() -> int {
 
     while (true) {
 
-        if (noResponseReceivedCounter > 10) {
+        if (noResponseReceivedCounter > 5) {
             break;
         } 
         try {
