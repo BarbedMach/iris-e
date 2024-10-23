@@ -4,16 +4,16 @@ namespace irise {
 
 auto Server::readFromClient() -> std::string {
     std::string incomingMessage{};
-    char buffer[2048];
+    char buffer[256];
 
-    ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer) - 1);
-    
-    if (bytesRead <= 0 && (errno = EAGAIN || errno == EWOULDBLOCK)) {
-        std::cout << "Server: Error reading from client!" << std::endl;
+    while(true) {
+        ssize_t bytesRead = read(clientSocket, buffer, sizeof(buffer) - 1);
+        if (bytesRead <= 0 && (errno = EAGAIN || errno == EWOULDBLOCK)) {
+            break;
+        }
+        incomingMessage.append(buffer, bytesRead);
     }
-    
-    incomingMessage.append(buffer, bytesRead);
-    
+
     return incomingMessage;
 }
 
