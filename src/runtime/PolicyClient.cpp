@@ -20,7 +20,7 @@ auto PolicyClient::GetDevices(Task* task, Device** devs, int* ndevs) -> void {
 
         auto& deviceToUse = irise::Scheduler::instance().getMapping()[*it];
 
-        std::cout << "Device to use: " << deviceToUse.devNo << std::endl;
+        std::cout << "Kernel name: " << (*it).name << " Device to use: " << deviceToUse.devNo << std::endl;
 
         if (!IsKernelSupported(task, devs_[deviceToUse.devNo])) {
             std::cout << "Kernel found but device is not supported!" << std::endl;
