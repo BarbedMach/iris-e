@@ -1032,8 +1032,8 @@ int Platform::TaskKernel(iris_task brs_task, iris_kernel brs_kernel, int dim, si
     irise::Server::instance().setState(irise::ServerState::KernelInfo);
   }
 
-  std::cout << "Kernel name: " << task->cmd_kernel()->name() << " Task name: " << task->name() << std::endl;
-  irise::KernelInfo kernelInfo{ task->cmd_kernel()->name(), task->name() };
+  std::cout << "Kernel name: " << kernel->name() << " Task name: " << kernel->get_task_name() << std::endl;
+  irise::KernelInfo kernelInfo{ kernel->name(), kernel->get_task_name() };
 
   irise::Scheduler::instance().registerKernel(kernelInfo);
   irise::Server::instance().sendKernelInfo(kernelInfo).waitForACK();
