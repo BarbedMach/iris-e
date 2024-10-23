@@ -15,7 +15,7 @@ auto PolicyClient::GetDevices(Task* task, Device** devs, int* ndevs) -> void {
     
     auto& kernels = irise::Scheduler::instance().getKernels();
 
-    if (auto it = std::ranges::find(kernels, taskName, &irise::KernelInfo::taskName); it != kernels.end()) {
+    if (auto it = std::ranges::find(kernels, taskName, &irise::KernelInfo::name); it != kernels.end()) {
         irise::Server::instance().sendMappingForKernelPending(irise::PendingMapping{ *it }).waitForACK();
 
         auto& deviceToUse = irise::Scheduler::instance().getMapping()[*it];
